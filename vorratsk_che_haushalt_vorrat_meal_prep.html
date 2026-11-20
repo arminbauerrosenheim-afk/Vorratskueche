@@ -1,0 +1,2765 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VorratsKüche – Haushalt, Vorrat & Meal-Prep</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            cream: {
+              50: '#FDFCFA',
+              100: '#FAF8F4',
+              200: '#F2EDE4',
+              300: '#E5DDD0',
+            },
+            sage: {
+              50: '#F2F6F3',
+              100: '#E2ECE5',
+              200: '#C5D9CC',
+              300: '#9BBCA7',
+              400: '#729A81',
+              500: '#567D65',
+              600: '#456652',
+              700: '#375242',
+              800: '#2B4033',
+            },
+            charcoal: {
+              50: '#F4F5F4',
+              100: '#E4E6E5',
+              300: '#A5ABA8',
+              500: '#646B67',
+              700: '#3B403D',
+              800: '#2A2E2C',
+              900: '#1D201E',
+            },
+            terracotta: {
+              50: '#FDF4F1',
+              100: '#FAE5DD',
+              500: '#C86D51',
+              600: '#AE583E',
+            },
+          },
+          boxShadow: {
+            soft: '0 2px 12px -2px rgba(42, 46, 44, 0.06), 0 1px 4px -1px rgba(42, 46, 44, 0.04)',
+            card: '0 4px 20px -4px rgba(42, 46, 44, 0.07), 0 1px 3px rgba(42, 46, 44, 0.04)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Sanftes Scrollen und saubere Basis-Stile */
+    html {
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #FAF8F4;
+      color: #2A2E2C;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    /* Feine Scrollbar für Modals und Listen */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D5CEC2;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B9B0A2;
+    }
+    /* Animations-Helfer */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-up {
+      animation: fadeSlideUp 0.22s ease-out forwards;
+    }
+    /* Verhindert Hintergrund-Scroll bei offenem Modal */
+    .modal-open {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-cream-100 text-charcoal-800 pb-20 md:pb-8">
+
+  <!-- ==================== OBERE NAVIGATION (DESKTOP & MOBILER HEADER) ==================== -->
+  <header class="sticky top-0 z-30 bg-cream-50/95 backdrop-blur-md border-b border-cream-300/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 gap-3">
+        <!-- Marken-Logo -->
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-sage-500 text-white flex items-center justify-center shadow-sm shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-4.97 0-9 3.582-9 8 0 2.76 1.56 5.2 3.94 6.65L6 21h12l-.94-3.35C19.44 16.2 21 13.76 21 11c0-4.418-4.03-8-9-8z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 11h6M12 8v6" />
+            </svg>
+          </div>
+          <div class="truncate">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-charcoal-900 leading-tight truncate">VorratsKüche</h1>
+            <p class="text-[11px] text-charcoal-500 hidden sm:block leading-tight">Haushalt · Vorrat · Meal-Prep</p>
+          </div>
+        </div>
+
+        <!-- Desktop-Navigation -->
+        <nav id="desktop-nav" class="hidden md:flex items-center gap-1 bg-cream-200/70 p-1 rounded-2xl border border-cream-300/70">
+          <!-- Wird dynamisch gerendert -->
+        </nav>
+
+        <!-- Rechte Steuerungs-Elemente: Einheiten-Umschalter & Status -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Globaler Einheiten-Toggle -->
+          <button id="global-unit-toggle" type="button"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all active:scale-95 bg-white border-cream-300 text-charcoal-700 hover:border-sage-400"
+            title="Zwischen exakten Gramm und sinnvoller TL/EL-Umrechnung umschalten">
+            <svg class="w-3.5 h-3.5 text-sage-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M7 12h10M10 18h4" />
+            </svg>
+            <span id="global-unit-label">g + TL/EL</span>
+          </button>
+
+          <!-- Sync-Status & Reset-Menü -->
+          <button id="reset-demo-btn" type="button"
+            class="p-2 rounded-xl text-charcoal-500 hover:text-charcoal-800 hover:bg-cream-200/80 transition-colors"
+            title="Speicherstatus & Beispieldaten verwalten">
+            <span id="sync-dot" class="inline-block w-2 h-2 rounded-full bg-sage-500 mr-1 align-middle"></span>
+            <svg class="w-4 h-4 inline-block align-middle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HAUPTINHALT ==================== -->
+  <main id="app-main" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
+    <!-- Ladeindikator bis Initialisierung abgeschlossen ist -->
+    <div class="flex flex-col items-center justify-center py-24 text-charcoal-500 gap-3">
+      <div class="w-8 h-8 border-2 border-sage-200 border-t-sage-600 rounded-full animate-spin"></div>
+      <p class="text-sm font-medium">Lade deine VorratsKüche…</p>
+    </div>
+  </main>
+
+  <!-- ==================== MOBILE UNTERE NAVIGATION ==================== -->
+  <nav id="mobile-nav" class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-cream-50/95 backdrop-blur-md border-t border-cream-300 px-2 py-1.5 shadow-lg">
+    <!-- Wird dynamisch gerendert -->
+  </nav>
+
+  <!-- ==================== MODAL CONTAINER ==================== -->
+  <div id="modal-root" class="fixed inset-0 z-50 hidden"></div>
+
+  <!-- ==================== TOAST BENACHRICHTIGUNGEN ==================== -->
+  <div id="toast-root" class="fixed bottom-20 md:bottom-6 right-4 left-4 sm:left-auto z-50 flex flex-col gap-2 pointer-events-none items-end"></div>
+
+  <!-- ==================== HAUPTSKRIPT (MODULE MIT FIREBASE & APP-LOGIK) ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // =========================================================================
+    // 1. KONSTANTEN, KATEGORIEN & TL/EL-UMRECHNUNGSTABELLE
+    // =========================================================================
+
+    const DAYS_OF_WEEK = [
+      'Montag',
+      'Dienstag',
+      'Mittwoch',
+      'Donnerstag',
+      'Freitag',
+      'Samstag',
+      'Sonntag',
+    ];
+
+    const PANTRY_CATEGORIES = [
+      'Konserven & Gläser',
+      'Trockenvorrat',
+      'Gewürze & Öle',
+      'Kühlschrank',
+      'Frisch & Gemüse',
+    ];
+
+    /**
+     * Dichte- & Umrechnungstabelle für Zutaten, bei denen Teelöffel (TL) oder
+     * Esslöffel (EL) in der Küche wirklich sinnvoll sind.
+     * Alle Werte in Gramm pro Löffel. `maxGrams` verhindert absurde Angaben wie "40 EL Öl".
+     */
+    const SPOON_CONVERSIONS = [
+      { keywords: ['olivenöl', 'rapsöl', 'sonnenblumenöl', 'sesamöl', 'pflanzenöl', 'speiseöl', 'öl'], tl: 4, el: 10, maxGrams: 100 },
+      { keywords: ['salz', 'meersalz'], tl: 6, el: 18, maxGrams: 55 },
+      { keywords: ['zucker', 'rohrzucker', 'puderzucker', 'vanillezucker'], tl: 5, el: 15, maxGrams: 120 },
+      { keywords: ['weizenmehl', 'dinkelmehl', 'mehl', 'speisestärke', 'stärke', 'weichweizengrieß', 'haferflocken'], tl: 4, el: 12, maxGrams: 96 },
+      { keywords: ['tomatenmark', 'miso-paste', 'preiselbeeren'], tl: 7, el: 20, maxGrams: 140 },
+      { keywords: ['kreuzkümmel', 'kümmel', 'paprikapulver', 'oregano', 'currypulver', 'muskat', 'pfeffer', 'zimt', 'piment', 'kurkuma', 'thymian', 'rosmarin', 'knoblauchpulver', 'chilipulver', 'cayenne', 'gewürznelken', 'kardamom', 'gewürz'], tl: 3, el: 9, maxGrams: 45 },
+      { keywords: ['senf', 'dijon-senf'], tl: 6, el: 18, maxGrams: 90 },
+      { keywords: ['honig', 'ahornsirup', 'agavendicksaft'], tl: 7, el: 20, maxGrams: 120 },
+      { keywords: ['sojasauce', 'sojasoße', 'apfelessig', 'essig', 'balsamico', 'zitronensaft', 'limettensaft', 'vanilleextrakt', 'brühe'], tl: 5, el: 15, maxGrams: 120 },
+      { keywords: ['butter', 'margarine', 'ghee', 'schmand'], tl: 5, el: 15, maxGrams: 90 },
+      { keywords: ['backpulver', 'natron', 'hefe trocken'], tl: 4, el: 12, maxGrams: 30 },
+    ];
+
+    // =========================================================================
+    // 2. DEINE REZEPT-BASEN, REZEPTE & VORRATS-DATEN (rezepte_mealprep-v3.csv)
+    // =========================================================================
+
+    function getSeedData() {
+      // A. DIE 10 REZEPT-BASEN (erkannt durch "(Basis)" im Titel)
+      const bases = [
+        {
+          id: 'basis_reis',
+          name: 'Grundrezept Reis',
+          description: 'Lockerer Basis-Reis für Meal Prep, hält sich 2-3 Tage im Kühlschrank',
+          yieldGrams: 500,
+          defaultServings: 3,
+          prepTimeMinutes: 20,
+          ingredients: [
+            { name: 'Reis', amountGrams: 200, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Wasser', amountGrams: 300, unit: 'ml', category: 'Trockenvorrat' },
+            { name: 'Salz', amountGrams: 3, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Reis gründlich waschen',
+            'Mit Wasser und Salz aufkochen',
+            'Deckel schließen und bei kleinster Hitze (BORA Stufe 1-2) 12-15 Min. quellen lassen, bis das Wasser komplett aufgenommen ist',
+          ],
+        },
+        {
+          id: 'basis_buttergemuese_ek',
+          name: 'Buttergemüse Erbsen & Karotten',
+          description: 'Klassische Gemüsebeilage in Butter geschwenkt, hält sich 2 Tage im Kühlschrank',
+          yieldGrams: 320,
+          defaultServings: 3,
+          prepTimeMinutes: 10,
+          ingredients: [
+            { name: 'Erbsen & Karotten (TK)', amountGrams: 300, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Butter', amountGrams: 15, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Salz', amountGrams: 3, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Muskatnuss', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Erbsen und Karotten in leicht gesalzenem Wasser bissfest garen oder dämpfen und abgießen',
+            'Im warmen Topf in Butter schwenken und mit Salz sowie Muskatnuss abschmecken',
+          ],
+        },
+        {
+          id: 'basis_buttergemuese_mix',
+          name: 'Buttergemüse Bunter Mix',
+          description: 'Blumenkohl, Brokkoli, Karotte und Erbsen in Butter, ideal zu Fisch',
+          yieldGrams: 550,
+          defaultServings: 3,
+          prepTimeMinutes: 15,
+          ingredients: [
+            { name: 'Blumenkohl', amountGrams: 150, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Brokkoli', amountGrams: 150, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Karotten', amountGrams: 150, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Erbsen (TK)', amountGrams: 75, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Butter', amountGrams: 20, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Salz', amountGrams: 3, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Muskatnuss', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Blumenkohl und Brokkoli in kleine Röschen teilen, Karotten schälen und in dünne Scheiben schneiden',
+            'Karotten und Blumenkohl in Salzwasser 3 Min. vorgaren',
+            'Brokkoli und Erbsen zugeben, weitere 3-4 Min. bissfest garen, abgießen und kurz eiskalt abschrecken',
+            'Im warmen Topf in Butter mit Muskat, Salz und Pfeffer glänzend schwenken',
+          ],
+        },
+        {
+          id: 'basis_buttergemuese_ke',
+          name: 'Buttergemüse Kürbis & Erbsen',
+          description: 'Cremiges Kürbis-Erbsen-Gemüse aus einem Topf, ideal zu Geflügel',
+          yieldGrams: 600,
+          defaultServings: 3,
+          prepTimeMinutes: 20,
+          ingredients: [
+            { name: 'Kürbisfleisch (geschält)', amountGrams: 350, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Erbsen (TK)', amountGrams: 175, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Schalotten', amountGrams: 30, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Butter', amountGrams: 30, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Gemüsebrühe', amountGrams: 70, unit: 'ml', category: 'Konserven & Gläser' },
+            { name: 'Salz', amountGrams: 3, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Muskatnuss', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Kürbis in 1,5 cm große Würfel und Schalotte fein schneiden',
+            'In der Hälfte der Butter bei mittlerer Hitze (BORA Stufe 5) 2-3 Min. farblos anschwitzen',
+            'Mit Brühe ablöschen, salzen und zugedeckt (BORA Stufe 3) 7-8 Min. dünsten, bis der Kürbis fast gar ist',
+            'Deckel abnehmen, Erbsen unterheben und 3-4 Min. offen köcheln, bis die Flüssigkeit fast eingekocht ist',
+            'Vom Herd nehmen, restliche kalte Butter einrühren und mit Salz, Pfeffer sowie Muskat abschmecken',
+          ],
+        },
+        {
+          id: 'basis_kartoffelbrei',
+          name: 'Cremiger Kartoffelbrei',
+          description: 'Samtiger Kartoffelstampf mit Butter und Muskat, hält sich 2 Tage',
+          yieldGrams: 480,
+          defaultServings: 2,
+          prepTimeMinutes: 25,
+          ingredients: [
+            { name: 'Kartoffeln (mehlig)', amountGrams: 400, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Milch', amountGrams: 70, unit: 'ml', category: 'Kühlschrank' },
+            { name: 'Butter', amountGrams: 20, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Salz', amountGrams: 3, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Muskatnuss', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Kartoffeln schälen, gleichmäßig würfeln und in Salzwasser ca. 15 Min. weich kochen',
+            'Abgießen und kurz im heißen Topf ausdampfen lassen',
+            'Butter, Muskatnuss und schrittweise warme Milch zugeben, gründlich stampfen und mit Salz abschmecken',
+          ],
+        },
+        {
+          id: 'basis_ofenkuerbis',
+          name: 'Ofenkürbis',
+          description: 'Gerösteter Crown-Prince- oder Muskatkürbis als Beilage oder Suppenbasis, hält sich 4 Tage',
+          yieldGrams: 700,
+          defaultServings: 4,
+          prepTimeMinutes: 40,
+          ingredients: [
+            { name: 'Kürbisfleisch (geschält)', amountGrams: 700, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Olivenöl', amountGrams: 30, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Paprikapulver edelsüß', amountGrams: 3, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Rosmarin oder Thymian', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Salz', amountGrams: 5, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Kürbis halbieren, entkernen, schälen und in Spalten oder 2 cm große Würfel schneiden',
+            'Mit Olivenöl, Paprikapulver, Kräutern, Salz und Pfeffer vermengen und auf einem Backblech verteilen',
+            'Bei 200 °C Ober-/Unterhitze 25-30 Min. goldbraun und weich backen',
+          ],
+        },
+        {
+          id: 'basis_serviettenknoedel',
+          name: 'Serviettenknödel',
+          description: 'Zwei Rollen bayerischer Serviettenknödel auf Vorrat, sehr gut einfrierbar',
+          yieldGrams: 1200,
+          defaultServings: 5,
+          prepTimeMinutes: 60,
+          ingredients: [
+            { name: 'Knödelbrot', amountGrams: 450, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Milch', amountGrams: 375, unit: 'ml', category: 'Kühlschrank' },
+            { name: 'Eier', amountGrams: 275, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Zwiebeln', amountGrams: 80, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Petersilie', amountGrams: 25, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Butter', amountGrams: 40, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Salz', amountGrams: 8, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Muskatnuss', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Zwiebel fein würfeln und in Butter glasig dünsten, gehackte Petersilie kurz mitschwenken und lauwarme Milch angießen',
+            'Mischung über das Knödelbrot gießen, würzen, verquirlte Eier zugeben und vorsichtig ohne Zerdrücken vermengen',
+            'Knödelmasse abgedeckt 15-20 Min. durchziehen lassen',
+            'Masse teilen, 2 Rollen (5-6 cm dick) formen und straff erst in Frischhaltefolie, dann in Alufolie wickeln',
+            'In sanft siedendem Salzwasser 25-30 Min. gar ziehen lassen, kurz ruhen lassen und in 2 cm Scheiben schneiden',
+          ],
+        },
+        {
+          id: 'basis_dressing',
+          name: 'Zitronen-Senf-Dressing',
+          description: 'Allround-Vinaigrette auf Vorrat im Schraubglas, hält sich bis zu 7 Tage',
+          yieldGrams: 105,
+          defaultServings: 4,
+          prepTimeMinutes: 5,
+          ingredients: [
+            { name: 'Olivenöl', amountGrams: 60, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Zitronensaft', amountGrams: 30, unit: 'ml', category: 'Frisch & Gemüse' },
+            { name: 'Dijon-Senf', amountGrams: 8, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Honig', amountGrams: 7, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Salz', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Zitronensaft (für mediterranen Salat alternativ Rotweinessig), Dijon-Senf, Honig, Salz und Pfeffer glattrühren',
+            'Olivenöl kräftig unterschlagen oder alle Zutaten im Schraubglas cremig schütteln',
+          ],
+        },
+        {
+          id: 'basis_joghurt_dip',
+          name: 'Joghurt-Kräuter-Dip',
+          description: 'Frischer, kindertauglicher Dip zu Geflügel, Pommes, Ofenkürbis und Fisch',
+          yieldGrams: 170,
+          defaultServings: 3,
+          prepTimeMinutes: 5,
+          ingredients: [
+            { name: 'Griechischer Joghurt', amountGrams: 150, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Olivenöl', amountGrams: 5, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Zitronensaft', amountGrams: 5, unit: 'ml', category: 'Frisch & Gemüse' },
+            { name: 'Petersilie oder Schnittlauch', amountGrams: 10, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Salz', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Kräuter fein hacken',
+            'Joghurt mit Olivenöl, Zitronensaft, Kräutern, Salz und Pfeffer glattrühren und abschmecken',
+          ],
+        },
+        {
+          id: 'basis_kompott',
+          name: 'Gewürz-Obstkompott',
+          description: 'Zuckerfreies Kompott aus Xenia-Birne und Santana-Apfel mit warmen Gewürzen, hält sich 3 Tage',
+          yieldGrams: 350,
+          defaultServings: 2,
+          prepTimeMinutes: 15,
+          ingredients: [
+            { name: 'Xenia-Birne', amountGrams: 180, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Santana-Bio-Apfel', amountGrams: 160, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Wasser', amountGrams: 60, unit: 'ml', category: 'Trockenvorrat' },
+            { name: 'Zitronensaft', amountGrams: 5, unit: 'ml', category: 'Frisch & Gemüse' },
+            { name: 'Zimtstange', amountGrams: 3, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Gewürznelken', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Kardamomkapsel', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Birne schälen, entkernen und würfeln, Bio-Apfel mit Schale entkernen und würfeln',
+            'Wasser, Zitronensaft, Zimtstange, Nelken und leicht angedrückte Kardamomkapsel kurz aufkochen',
+            'Obst zugeben und zugedeckt bei schwacher Hitze 6-8 Min. sanft dünsten, dann ganze Gewürze entfernen',
+          ],
+        },
+      ];
+
+      // B. DIE 13 REZEPTE (mit exakter Basis-Verknüpfung)
+      const recipes = [
+        {
+          id: 'rec_hackbaellchen',
+          name: 'Schwedische Hackbällchen mit Sahnesoße',
+          description: 'Saftige Köttbullar-Style Hackbällchen aus der Edelstahlpfanne, ideal auch mit Buttergemüse Erbsen & Karotten',
+          defaultServings: 4,
+          prepTimeMinutes: 30,
+          baseId: 'basis_reis',
+          baseAmountGrams: 500,
+          ingredients: [
+            { name: 'Hackfleisch', amountGrams: 500, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Schalotten', amountGrams: 30, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Haferflocken (fein)', amountGrams: 30, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Milch', amountGrams: 45, unit: 'ml', category: 'Kühlschrank' },
+            { name: 'Eier', amountGrams: 55, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Senf', amountGrams: 8, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Butter', amountGrams: 15, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Rinder- oder Hühnerbrühe', amountGrams: 150, unit: 'ml', category: 'Konserven & Gläser' },
+            { name: 'Sahne', amountGrams: 150, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Sojasoße', amountGrams: 5, unit: 'ml', category: 'Gewürze & Öle' },
+            { name: 'Preiselbeeren (Glas)', amountGrams: 80, unit: 'g', category: 'Konserven & Gläser' },
+            { name: 'Zitronensaft', amountGrams: 5, unit: 'ml', category: 'Frisch & Gemüse' },
+            { name: 'Piment', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Salz', amountGrams: 5, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Haferflocken in Milch kurz quellen lassen, dann mit Hackfleisch, fein gewürfelter Schalotte, Ei, Senf, Salz, Pfeffer und Piment verkneten',
+            'Walnussgroße Bällchen formen',
+            'Edelstahlpfanne ohne Fett vorheizen (Wassertropfen-Test), Butter zugeben und Bällchen 8-10 Min. rundherum goldbraun braten, dann warmstellen',
+            'Bratensatz mit Brühe ablöschen, Sahne, Sojasoße und 1 TL Preiselbeeren einrühren und 4-5 Min. sämig einkochen',
+            'Mit Salz, Pfeffer und Zitronensaft abschmecken und mit Reis sowie übrigen Preiselbeeren servieren',
+          ],
+        },
+        {
+          id: 'rec_reisfleisch',
+          name: 'Reisfleisch (One-Pot)',
+          description: 'Deftiger Ein-Topf-Klassiker mit Hackfleisch, Paprika und Champignons, ideal zum Vorkochen',
+          defaultServings: 4,
+          prepTimeMinutes: 35,
+          baseId: null,
+          baseAmountGrams: 0,
+          ingredients: [
+            { name: 'Hackfleisch', amountGrams: 500, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Langkornreis', amountGrams: 250, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Champignons', amountGrams: 250, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Paprika', amountGrams: 300, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Zwiebeln', amountGrams: 100, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Knoblauch', amountGrams: 10, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Tomatenmark', amountGrams: 30, unit: 'g', category: 'Konserven & Gläser' },
+            { name: 'Paprikapulver edelsüß', amountGrams: 8, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Kümmel (gemahlen)', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Brühe', amountGrams: 650, unit: 'ml', category: 'Konserven & Gläser' },
+            { name: 'Pflanzenöl', amountGrams: 15, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Salz', amountGrams: 5, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Hackfleisch im großen Topf in Öl scharf krümelig anbraten',
+            'Gewürfelte Zwiebel und gehackten Knoblauch 2-3 Min. mitdünsten, Tomatenmark und Paprikapulver kurz mitrösten',
+            'Geviertelte Champignons, Paprikastücke und rohen Reis 1-2 Min. mitschwenken',
+            'Mit heißer Brühe ablöschen, würzen und aufkochen',
+            'Deckel schließen und erst 2-3 Min. auf BORA Stufe 3, dann auf Stufe 2 insgesamt 18-20 Min. quellen lassen, 5 Min. ruhen lassen und abschmecken',
+          ],
+        },
+        {
+          id: 'rec_rahmschwammerl',
+          name: 'Bayerische Rahmschwammerl',
+          description: 'Cremige Wirtshaus-Pilzsoße mit frischer Zitrone und Petersilie zu Serviettenknödeln',
+          defaultServings: 4,
+          prepTimeMinutes: 25,
+          baseId: 'basis_serviettenknoedel',
+          baseAmountGrams: 600,
+          ingredients: [
+            { name: 'Gemischte Pilze', amountGrams: 650, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Butter', amountGrams: 30, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Schalotten', amountGrams: 35, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Knoblauch', amountGrams: 5, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Weißwein', amountGrams: 100, unit: 'ml', category: 'Konserven & Gläser' },
+            { name: 'Brühe', amountGrams: 200, unit: 'ml', category: 'Konserven & Gläser' },
+            { name: 'Sahne', amountGrams: 200, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Schmand', amountGrams: 40, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Bio-Zitrone', amountGrams: 40, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Petersilie', amountGrams: 15, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Muskatnuss', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Salz', amountGrams: 5, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Pilze trocken putzen, schneiden und in einer heißen Edelstahlpfanne in der Hälfte der Butter portionsweise 3-4 Min. scharf anbraten, erst am Ende salzen und herausnehmen',
+            'Hitze reduzieren, restliche Butter zugeben, Schalotte 2-3 Min. und Knoblauch 30 Sek. glasig dünsten',
+            'Mit Weißwein ablöschen und auf die Hälfte einkochen',
+            'Brühe, Sahne und Schmand einrühren und 5-8 Min. sämig einkochen',
+            'Pilze samt Saft 2-3 Min. mitziehen lassen, mit Zitronenabrieb, Zitronensaft, Muskat, Salz und Pfeffer abschmecken und Petersilie unterheben',
+          ],
+        },
+        {
+          id: 'rec_steinbeisser',
+          name: 'Steinbeißerfilet mit Zitronen-Butter-Soße',
+          description: 'Auf den Punkt gebratener Steinbeißer mit montierter Zitronenbutter, ideal zusätzlich mit Grundrezept Reis',
+          defaultServings: 3,
+          prepTimeMinutes: 20,
+          baseId: 'basis_buttergemuese_mix',
+          baseAmountGrams: 500,
+          ingredients: [
+            { name: 'Steinbeißerfilet', amountGrams: 450, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Weizenmehl', amountGrams: 20, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Pflanzenöl', amountGrams: 25, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Butter (eiskalt)', amountGrams: 45, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Bio-Zitrone', amountGrams: 40, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Brühe', amountGrams: 50, unit: 'ml', category: 'Konserven & Gläser' },
+            { name: 'Petersilie', amountGrams: 10, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Salz', amountGrams: 3, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Steinbeißerfilets trocken tupfen, portionieren, würzen, dünn in Mehl wenden und überschüssiges Mehl abklopfen',
+            'In einer beschichteten Pfanne (BORA Stufe 6-7) in Öl 2-3 Min. anbraten, wenden und 1,5-2 Min. glasig fertig braten, dann warmstellen',
+            'Überschüssiges Bratfett abgießen, Bratensatz mit Brühe und Zitronensaft ablöschen und kurz auf die Hälfte einkochen',
+            'Pfanne vom Herd nehmen und eiskalte Butterwürfel mit dem Schneebesen einmontieren (nicht mehr kochen)',
+            'Zitronenabrieb und gehackte Petersilie unterrühren, abschmecken und über den Fisch geben',
+          ],
+        },
+        {
+          id: 'rec_drumsticks',
+          name: 'Knusprige Hähnchen-Drumsticks mit Pommes',
+          description: 'Kindertauglich mild gewürzte Ofen-Keulen mit Pommes, ideal zusätzlich mit Joghurt-Kräuter-Dip',
+          defaultServings: 3,
+          prepTimeMinutes: 45,
+          baseId: 'basis_buttergemuese_ke',
+          baseAmountGrams: 500,
+          ingredients: [
+            { name: 'Hähnchen-Drumsticks', amountGrams: 900, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Olivenöl', amountGrams: 45, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Paprikapulver edelsüß', amountGrams: 6, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Knoblauchpulver', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Oregano oder Thymian', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Honig', amountGrams: 7, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Salz', amountGrams: 5, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'TK-Pommes', amountGrams: 650, unit: 'g', category: 'Kühlschrank' },
+          ],
+          steps: [
+            'Drumsticks mit Küchenpapier gründlich trocken tupfen',
+            'Öl, Paprikapulver, Knoblauchpulver, Kräuter, Honig, Salz und Pfeffer verrühren und die Keulen rundherum einreiben',
+            'Backofen auf 200 °C Umluft vorheizen und Drumsticks 35-40 Min. backen (nach 20 Min. wenden)',
+            'Nach 15-20 Min. Backzeit das zweite Blech mit den Pommes dazuschieben und 20-22 Min. knusprig mitbacken',
+          ],
+        },
+        {
+          id: 'rec_fischstaebchen',
+          name: 'Fischstäbchen-Klassiker',
+          description: 'Knusprig ausgebackene Fischstäbchen mit Kartoffelbrei, ideal zusätzlich mit Buttergemüse Erbsen & Karotten',
+          defaultServings: 2,
+          prepTimeMinutes: 15,
+          baseId: 'basis_kartoffelbrei',
+          baseAmountGrams: 480,
+          ingredients: [
+            { name: 'Fischstäbchen (TK)', amountGrams: 300, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Pflanzenöl', amountGrams: 45, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Reichlich Öl oder Butterschmalz in einer Pfanne auf mittlerer Hitze erhitzen',
+            'Gefrorene Fischstäbchen von jeder Seite 3-4 Min. goldbraun und knusprig ausbacken',
+            'Kurz auf Küchenpapier abtropfen lassen und mit warmem Kartoffelbrei servieren',
+          ],
+        },
+        {
+          id: 'rec_kuerbissuppe',
+          name: 'Samtige Kürbissuppe mit Kokos & Ingwer',
+          description: 'Cremige Suppe aus vorgebackenem Ofenkürbis mit frischem Ingwer, Kokosmilch und Limette',
+          defaultServings: 4,
+          prepTimeMinutes: 20,
+          baseId: 'basis_ofenkuerbis',
+          baseAmountGrams: 700,
+          ingredients: [
+            { name: 'Zwiebeln', amountGrams: 80, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Ingwer (frisch)', amountGrams: 15, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Butter', amountGrams: 15, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Gemüse- oder Hühnerbrühe', amountGrams: 550, unit: 'ml', category: 'Konserven & Gläser' },
+            { name: 'Kokosmilch', amountGrams: 200, unit: 'ml', category: 'Konserven & Gläser' },
+            { name: 'Limettensaft', amountGrams: 10, unit: 'ml', category: 'Frisch & Gemüse' },
+            { name: 'Salz', amountGrams: 5, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Pfeffer', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Gewürfelte Zwiebel und fein geriebenen Ingwer in Butter glasig dünsten',
+            'Vorgebackenen Ofenkürbis zugeben, mit Brühe aufgießen und auf BORA Stufe 2-3 ca. 5-8 Min. sanft köcheln (bei rohem Kürbis 15 Min.)',
+            'Kokosmilch angießen, alles samtig pürieren und mit Salz, Pfeffer sowie Limettensaft abschmecken',
+          ],
+        },
+        {
+          id: 'rec_misosuppe',
+          name: 'Miso-Gemüse-Suppe mit Chinakohl & Reisbandnudeln',
+          description: 'Wärmende Umami-Nudelsuppe mit knackigem Chinakohl und Gemüse nach Bestand',
+          defaultServings: 2,
+          prepTimeMinutes: 20,
+          baseId: null,
+          baseAmountGrams: 0,
+          ingredients: [
+            { name: 'Wasser', amountGrams: 850, unit: 'ml', category: 'Trockenvorrat' },
+            { name: 'Miso-Paste', amountGrams: 45, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Reisbandnudeln', amountGrams: 110, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Chinakohl', amountGrams: 250, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Gemüse nach Bestand', amountGrams: 150, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Ingwer (frisch)', amountGrams: 15, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Knoblauch', amountGrams: 5, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Sojasoße', amountGrams: 15, unit: 'ml', category: 'Gewürze & Öle' },
+            { name: 'Sesamöl (geröstet)', amountGrams: 5, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Frühlingszwiebeln', amountGrams: 30, unit: 'g', category: 'Frisch & Gemüse' },
+          ],
+          steps: [
+            'Reisbandnudeln separat nach Packungsanleitung kochen, kalt abschrecken und beiseitestellen',
+            'Ingwer, Knoblauch und festes Gemüse in Sesamöl 1-2 Min. anschwitzen, mit Wasser und Sojasoße aufgießen und aufkochen',
+            'Chinakohl in Streifen zugeben und 3-4 Min. sanft köcheln lassen',
+            'Herd ausschalten (Miso niemals kochen), Miso-Paste in einer Kelle heißer Brühe glattrühren und zurück in den Topf geben',
+            'Brühe und Gemüse über die Nudeln in Schüsseln gießen und mit Frühlingszwiebeln toppen',
+          ],
+        },
+        {
+          id: 'rec_riesenbohnensalat',
+          name: 'Mediterraner Tomaten-Riesenbohnen-Salat',
+          description: 'Standfester Grill- und Beilagensalat im Verhältnis 2 zu 1 Tomaten zu weißen Riesenbohnen',
+          defaultServings: 4,
+          prepTimeMinutes: 15,
+          baseId: 'basis_dressing',
+          baseAmountGrams: 90,
+          ingredients: [
+            { name: 'Weiße Riesenbohnen (Abtropfgewicht)', amountGrams: 240, unit: 'g', category: 'Konserven & Gläser' },
+            { name: 'Tomaten', amountGrams: 450, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Schalotten', amountGrams: 30, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Oregano (getrocknet)', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Petersilie oder Basilikum', amountGrams: 15, unit: 'g', category: 'Frisch & Gemüse' },
+          ],
+          steps: [
+            'Riesenbohnen abspülen und abtropfen lassen, Tomaten würfeln oder halbieren und Schalotte in feine Ringe schneiden',
+            'Schalottenringe 5 Min. im Dressing (mit Rotweinessig ohne Honig) ziehen lassen, um die Schärfe zu mildern',
+            'Oregano einrühren, Bohnen, Tomaten und gehackte Kräuter vorsichtig untermengen und gut durchziehen lassen',
+          ],
+        },
+        {
+          id: 'rec_chinakohlsalat',
+          name: 'Frischer Zitronen-Chinakohl-Salat',
+          description: 'Knackiger, frischer Gegenpol zu Pasta oder deftigen Hauptgerichten',
+          defaultServings: 3,
+          prepTimeMinutes: 10,
+          baseId: 'basis_dressing',
+          baseAmountGrams: 80,
+          ingredients: [
+            { name: 'Chinakohl', amountGrams: 225, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Salz', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Chinakohl quer in feine Streifen schneiden',
+            'Mit einer Prise Salz in einer Schüssel ca. 30 Sek. leicht mit den Händen durchkneten',
+            'Zitronen-Senf-Dressing untermischen und vor dem Servieren 10 Min. durchziehen lassen',
+          ],
+        },
+        {
+          id: 'rec_kaiserschmarrn',
+          name: 'Fluffiger Kaiserschmarrn',
+          description: 'Luftiger Schmarrn mit steif geschlagenem Eischnee und karamellisierter Kruste',
+          defaultServings: 3,
+          prepTimeMinutes: 25,
+          baseId: 'basis_kompott',
+          baseAmountGrams: 300,
+          ingredients: [
+            { name: 'Eier', amountGrams: 220, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Milch', amountGrams: 200, unit: 'ml', category: 'Kühlschrank' },
+            { name: 'Weizenmehl', amountGrams: 120, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Vanilleextrakt', amountGrams: 5, unit: 'ml', category: 'Gewürze & Öle' },
+            { name: 'Salz', amountGrams: 2, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Butter', amountGrams: 45, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Zucker', amountGrams: 20, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Puderzucker', amountGrams: 15, unit: 'g', category: 'Trockenvorrat' },
+          ],
+          steps: [
+            'Eier trennen, Eigelb mit Milch, Mehl, Vanille und Salz glattrühren, Eiweiß steif schlagen und in zwei Portionen vorsichtig unterheben',
+            '30 g Butter in einer großen Pfanne bei mittlerer Hitze schmelzen, Teig eingießen und 4-5 Min. goldbraun anbacken',
+            'Pfannkuchen vierteln, wenden, 2-3 Min. weiterbacken und mit zwei Wendern in Stücke zerreißen',
+            'Restliche 15 g Butter und Zucker zugeben, 1-2 Min. unter Schwenken karamellisieren und mit Puderzucker sowie Kompott servieren',
+          ],
+        },
+        {
+          id: 'rec_griessbrei',
+          name: 'Cremiger Grießbrei',
+          description: 'Schneller, samtiger Grießbrei mit Butter und Vanille, passt genial zu Obstkompott',
+          defaultServings: 3,
+          prepTimeMinutes: 10,
+          baseId: 'basis_kompott',
+          baseAmountGrams: 300,
+          ingredients: [
+            { name: 'Milch', amountGrams: 500, unit: 'ml', category: 'Kühlschrank' },
+            { name: 'Weichweizengrieß', amountGrams: 50, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Butter', amountGrams: 15, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Zucker oder Honig', amountGrams: 20, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Salz', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Vanilleextrakt', amountGrams: 3, unit: 'ml', category: 'Gewürze & Öle' },
+          ],
+          steps: [
+            'Milch mit Salz, Vanille und Süße unter Rühren aufkochen und Hitze sofort auf Minimum reduzieren',
+            'Grieß unter ständigem Rühren mit dem Schneebesen einrieseln lassen und 1-2 Min. sanft köcheln',
+            'Vom Herd nehmen, Butter einrühren und zugedeckt 3-5 Min. nachquellen lassen',
+          ],
+        },
+        {
+          id: 'rec_salzburger_nockerl',
+          name: 'Salzburger Nockerl',
+          description: 'Luftiges österreichisches Ofen-Soufflé aus drei Nocken, sofort servieren',
+          defaultServings: 3,
+          prepTimeMinutes: 25,
+          baseId: null,
+          baseAmountGrams: 0,
+          ingredients: [
+            { name: 'Eier (5 Eiweiß & 3 Eigelb)', amountGrams: 275, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Zucker', amountGrams: 60, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Vanillezucker', amountGrams: 12, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Salz', amountGrams: 1, unit: 'g', category: 'Gewürze & Öle' },
+            { name: 'Bio-Zitrone (Abrieb)', amountGrams: 20, unit: 'g', category: 'Frisch & Gemüse' },
+            { name: 'Weizenmehl', amountGrams: 20, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Speisestärke', amountGrams: 10, unit: 'g', category: 'Trockenvorrat' },
+            { name: 'Butter', amountGrams: 30, unit: 'g', category: 'Kühlschrank' },
+            { name: 'Milch', amountGrams: 50, unit: 'ml', category: 'Kühlschrank' },
+            { name: 'Puderzucker', amountGrams: 20, unit: 'g', category: 'Trockenvorrat' },
+          ],
+          steps: [
+            'Backofen auf 190 °C Ober-/Unterhitze (keine Umluft) vorheizen, Butter, Milch und 1 TL Vanillezucker schmelzen und in eine ovale Auflaufform gießen',
+            '5 Eiweiß mit Salz anschlagen, Zucker und Vanillezucker einrieseln lassen und glänzend-steif schlagen',
+            '3 Eigelb und Zitronenabrieb nur 2-3 Mal kurz unterziehen, Mehl und Stärke darübersieben und extrem vorsichtig unterheben',
+            'Drei große Pyramiden-Nocken in die Form setzen und sofort 10-12 Min. backen, Ofentür niemals öffnen',
+            'Sofort dick mit Puderzucker bestäuben und augenblicklich servieren',
+          ],
+        },
+      ];
+
+      // C. PASSENDER START-VORRAT
+      const pantry = [
+        { id: 'pan-v3-1', name: 'Reis', category: 'Trockenvorrat', amountGrams: 1000, unit: 'g' },
+        { id: 'pan-v3-2', name: 'Butter', category: 'Kühlschrank', amountGrams: 250, unit: 'g' },
+        { id: 'pan-v3-3', name: 'Olivenöl', category: 'Gewürze & Öle', amountGrams: 500, unit: 'g' },
+        { id: 'pan-v3-4', name: 'Pflanzenöl', category: 'Gewürze & Öle', amountGrams: 500, unit: 'g' },
+        { id: 'pan-v3-5', name: 'Milch', category: 'Kühlschrank', amountGrams: 1000, unit: 'ml' },
+        { id: 'pan-v3-6', name: 'Eier', category: 'Kühlschrank', amountGrams: 330, unit: 'g' },
+        { id: 'pan-v3-7', name: 'Weizenmehl', category: 'Trockenvorrat', amountGrams: 1000, unit: 'g' },
+        { id: 'pan-v3-8', name: 'Weichweizengrieß', category: 'Trockenvorrat', amountGrams: 500, unit: 'g' },
+        { id: 'pan-v3-9', name: 'Zucker', category: 'Trockenvorrat', amountGrams: 500, unit: 'g' },
+        { id: 'pan-v3-10', name: 'Honig', category: 'Gewürze & Öle', amountGrams: 250, unit: 'g' },
+        { id: 'pan-v3-11', name: 'Dijon-Senf', category: 'Gewürze & Öle', amountGrams: 200, unit: 'g' },
+        { id: 'pan-v3-12', name: 'Salz', category: 'Gewürze & Öle', amountGrams: 500, unit: 'g' },
+        { id: 'pan-v3-13', name: 'Pfeffer', category: 'Gewürze & Öle', amountGrams: 50, unit: 'g' },
+        { id: 'pan-v3-14', name: 'Muskatnuss', category: 'Gewürze & Öle', amountGrams: 20, unit: 'g' },
+        { id: 'pan-v3-15', name: 'Paprikapulver edelsüß', category: 'Gewürze & Öle', amountGrams: 60, unit: 'g' },
+        { id: 'pan-v3-16', name: 'Zwiebeln', category: 'Frisch & Gemüse', amountGrams: 500, unit: 'g' },
+        { id: 'pan-v3-17', name: 'Schalotten', category: 'Frisch & Gemüse', amountGrams: 150, unit: 'g' },
+        { id: 'pan-v3-18', name: 'Knoblauch', category: 'Frisch & Gemüse', amountGrams: 80, unit: 'g' },
+        { id: 'pan-v3-19', name: 'Kartoffeln (mehlig)', category: 'Frisch & Gemüse', amountGrams: 1000, unit: 'g' },
+        { id: 'pan-v3-20', name: 'Erbsen & Karotten (TK)', category: 'Kühlschrank', amountGrams: 450, unit: 'g' },
+        { id: 'pan-v3-21', name: 'Sojasoße', category: 'Gewürze & Öle', amountGrams: 150, unit: 'ml' },
+        { id: 'pan-v3-22', name: 'Vanilleextrakt', category: 'Gewürze & Öle', amountGrams: 30, unit: 'ml' },
+        { id: 'pan-v3-23', name: 'Puderzucker', category: 'Trockenvorrat', amountGrams: 250, unit: 'g' },
+      ];
+
+      // D. BEISPIEL-WOCHENPLAN MIT DEINEN MEAL-PREP-SYNERGIEN
+      const mealPlan = [
+        { id: 'mp-v3-1', day: 'Montag', recipeId: 'rec_hackbaellchen', servings: 4 },
+        { id: 'mp-v3-2', day: 'Dienstag', recipeId: 'rec_riesenbohnensalat', servings: 4 },
+        { id: 'mp-v3-3', day: 'Mittwoch', recipeId: 'rec_rahmschwammerl', servings: 4 },
+        { id: 'mp-v3-4', day: 'Donnerstag', recipeId: 'rec_chinakohlsalat', servings: 3 },
+        { id: 'mp-v3-5', day: 'Freitag', recipeId: 'rec_kaiserschmarrn', servings: 3 },
+        { id: 'mp-v3-6', day: 'Samstag', recipeId: 'rec_griessbrei', servings: 3 },
+        { id: 'mp-v3-7', day: 'Sonntag', recipeId: 'rec_kuerbissuppe', servings: 4 },
+      ];
+
+      return { bases, recipes, pantry, mealPlan };
+    }
+
+    // =========================================================================
+    // 3. ANWENDUNGSZUSTAND (STATE) & FIREBASE REFERENZEN
+    // =========================================================================
+
+    const state = {
+      initialized: false,
+      storageMode: 'memory', // 'cloud' oder 'memory'
+      activeTab: 'week',     // 'week' | 'shopping' | 'pantry' | 'recipes'
+      recipesSubTab: 'recipes', // 'recipes' | 'bases'
+      showSpoons: true,
+
+      // Kern-Daten
+      pantry: [],
+      bases: [],
+      recipes: [],
+      mealPlan: [],
+
+      // Wochenplan- & Einkaufs-Status
+      preppedBases: {},      // { [baseId]: true }
+      forceBuy: {},          // { [normalizedName]: true }
+      checkedShopping: {},   // { [normalizedName]: true }
+
+      // Filter- & UI-Zustände
+      pantrySearch: '',
+      pantryCategory: 'Alle',
+      recipeSearch: '',
+      recipeBaseFilter: 'Alle',
+      suggestionSort: 'combo', // 'combo' | 'pantry' | 'synergy'
+      mobileSuggestionsOpen: false,
+
+      // Aktives Modal
+      modal: null, // { type: 'cook'|'pantry'|'recipe'|'base'|'addMeal'|'batchPrep'|'confirm'|'storageInfo', data: ... }
+    };
+
+    // Firebase Instanzen
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let appId = typeof __app_id !== 'undefined' ? __app_id : 'vorratskueche-default';
+    let unsubscribers = [];
+
+    // =========================================================================
+    // 4. HILFSFUNKTIONEN (TEXT, ZAHLEN, EINHEITEN-UMRECHNUNG)
+    // =========================================================================
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function normalizeName(name) {
+      return String(name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+
+    function generateId(prefix = 'id') {
+      if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return `${prefix}-${crypto.randomUUID().slice(0, 8)}`;
+      }
+      return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+    }
+
+    /** Formatiert Zahlen sauber nach deutschem Standard (z. B. 1.200 oder 1,5) */
+    function formatNumberDE(num, maxDecimals = 1) {
+      const rounded = Math.round(num * Math.pow(10, maxDecimals)) / Math.pow(10, maxDecimals);
+      return rounded.toLocaleString('de-DE', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: maxDecimals,
+      });
+    }
+
+    /** Rundet Grammzahlen praxisnah (ganze Gramm ab 10g, 1 Dezimalstelle bei kleinen Mengen) */
+    function cleanGrams(grams) {
+      if (grams >= 10) return Math.round(grams);
+      return Math.round(grams * 10) / 10;
+    }
+
+    /**
+     * Berechnet eine sinnvolle TL/EL-Angabe für eine Zutat.
+     * Gibt null zurück, wenn Löffel für diese Zutat oder Menge keinen Sinn ergeben.
+     */
+    function getSpoonConversion(grams, ingredientName) {
+      if (!grams || grams <= 0 || !ingredientName) return null;
+      const norm = normalizeName(ingredientName);
+      const entry = SPOON_CONVERSIONS.find((rule) =>
+        rule.keywords.some((kw) => norm === kw || norm.includes(kw))
+      );
+      if (!entry) return null;
+      if (grams > entry.maxGrams) return null;
+
+      // Sehr kleine Gewürzmenge (z. B. 1 g Muskatnuss bei 1 TL = 3 g)
+      const tlExact = grams / entry.tl;
+      if (tlExact < 0.4) {
+        if (tlExact >= 0.2) return '⅓ TL';
+        return '1 Prise';
+      }
+
+      // Entscheide ob EL oder TL sinnvoller ist
+      const elExact = grams / entry.el;
+      if (elExact >= 0.9) {
+        const elRounded = Math.round(elExact * 2) / 2;
+        if (elRounded <= 8) {
+          return `${formatNumberDE(elRounded, 1)} EL`;
+        }
+        return null;
+      }
+
+      const tlRounded = Math.round(tlExact * 2) / 2;
+      if (tlRounded > 0 && tlRounded <= 6) {
+        return `${formatNumberDE(tlRounded, 1)} TL`;
+      }
+      return null;
+    }
+
+    /**
+     * Rendert eine Menge als HTML: Immer exakt in Gramm/ml, optional mit schönem TL/EL-Badge.
+     */
+    function formatAmountHTML(grams, ingredientName, showSpoons = state.showSpoons, unit = 'g') {
+      const g = cleanGrams(grams);
+      const u = unit || 'g';
+      const gStr = `${formatNumberDE(g, g < 10 ? 1 : 0)} ${u}`;
+      if (!showSpoons) return `<span class="font-semibold tabular-nums">${gStr}</span>`;
+      const spoon = getSpoonConversion(g, ingredientName);
+      if (!spoon) return `<span class="font-semibold tabular-nums">${gStr}</span>`;
+      return `<span class="font-semibold tabular-nums">${gStr}</span> <span class="text-xs font-medium text-sage-700 bg-sage-100/90 px-1.5 py-0.5 rounded-md ml-0.5 whitespace-nowrap">(${spoon})</span>`;
+    }
+
+    /** Reiner Text für Tooltips / Zusammenfassungen */
+    function formatAmountText(grams, ingredientName, showSpoons = state.showSpoons, unit = 'g') {
+      const g = cleanGrams(grams);
+      const u = unit || 'g';
+      const gStr = `${formatNumberDE(g, g < 10 ? 1 : 0)} ${u}`;
+      if (!showSpoons) return gStr;
+      const spoon = getSpoonConversion(g, ingredientName);
+      return spoon ? `${gStr} (${spoon})` : gStr;
+    }
+
+    function getBaseById(id) {
+      return state.bases.find((b) => b.id === id) || null;
+    }
+
+    function getRecipeById(id) {
+      return state.recipes.find((r) => r.id === id) || null;
+    }
+
+    function getPantryItemByName(name) {
+      const norm = normalizeName(name);
+      return state.pantry.find((p) => normalizeName(p.name) === norm) || null;
+    }
+
+    function getPantryGrams(name) {
+      const item = getPantryItemByName(name);
+      return item ? Number(item.amountGrams) || 0 : 0;
+    }
+
+    /** Liefert alle bekannten Zutatennamen (für Autocomplete in Formularen) */
+    function getAllKnownIngredientNames() {
+      const map = new Map();
+      state.pantry.forEach((p) => map.set(normalizeName(p.name), p.name));
+      state.bases.forEach((b) => (b.ingredients || []).forEach((i) => map.set(normalizeName(i.name), i.name)));
+      state.recipes.forEach((r) => (r.ingredients || []).forEach((i) => map.set(normalizeName(i.name), i.name)));
+      return Array.from(map.values()).sort((a, b) => a.localeCompare(b, 'de'));
+    }
+
+    // =========================================================================
+    // 5. KERN-BERECHNUNGEN (MEAL-PREP-BASEN, VORRAT-MATCH, EINKAUFSLISTE)
+    // =========================================================================
+
+    /**
+     * Berechnet die benötigten Zutaten eines Rezepts für eine gegebene Portionszahl.
+     * Gibt getrennt Hauptzutaten, skalierte Basis-Menge und (falls gewünscht) Basis-Zutaten zurück.
+     */
+    function getScaledRecipeDetails(recipe, servings = recipe.defaultServings) {
+      const factor = (Number(servings) || recipe.defaultServings || 4) / (recipe.defaultServings || 4);
+      const base = recipe.baseId ? getBaseById(recipe.baseId) : null;
+      const scaledBaseGrams = base ? (Number(recipe.baseAmountGrams) || base.yieldGrams || 400) * factor : 0;
+      const baseScaleFactor = base && base.yieldGrams > 0 ? scaledBaseGrams / base.yieldGrams : 0;
+
+      const baseIngredients = base
+        ? (base.ingredients || []).map((ing) => ({
+            ...ing,
+            amountGrams: (Number(ing.amountGrams) || 0) * baseScaleFactor,
+          }))
+        : [];
+
+      const mainIngredients = (recipe.ingredients || []).map((ing) => ({
+        ...ing,
+        amountGrams: (Number(ing.amountGrams) || 0) * factor,
+      }));
+
+      return {
+        factor,
+        base,
+        scaledBaseGrams,
+        baseScaleFactor,
+        baseIngredients,
+        mainIngredients,
+      };
+    }
+
+    /**
+     * Analysiert alle im Wochenplan genutzten Rezept-Basen für den Meal-Prep-Banner.
+     */
+    function computeWeeklyBaseAnalysis() {
+      const map = new Map(); // baseId -> { base, totalGrams, meals: [{ meal, recipe, baseGrams }], isPrepped }
+
+      state.mealPlan.forEach((meal) => {
+        const recipe = getRecipeById(meal.recipeId);
+        if (!recipe || !recipe.baseId) return;
+        const base = getBaseById(recipe.baseId);
+        if (!base) return;
+
+        const details = getScaledRecipeDetails(recipe, meal.servings);
+        if (!map.has(base.id)) {
+          map.set(base.id, {
+            base,
+            totalGrams: 0,
+            meals: [],
+            isPrepped: Boolean(state.preppedBases[base.id]),
+          });
+        }
+        const entry = map.get(base.id);
+        entry.totalGrams += details.scaledBaseGrams;
+        entry.meals.push({ meal, recipe, baseGrams: details.scaledBaseGrams });
+      });
+
+      // Aggregierte Zutaten pro Gesamt-Batch berechnen
+      const results = Array.from(map.values()).map((entry) => {
+        const batchFactor = entry.base.yieldGrams > 0 ? entry.totalGrams / entry.base.yieldGrams : 1;
+        const batchIngredients = (entry.base.ingredients || []).map((ing) => ({
+          ...ing,
+          amountGrams: (Number(ing.amountGrams) || 0) * batchFactor,
+        }));
+        return {
+          ...entry,
+          batchIngredients,
+          isShared: entry.meals.length >= 2,
+        };
+      });
+
+      // Mehrfach geteilte Basen zuerst, dann nach Gesamtmenge absteigend
+      results.sort((a, b) => {
+        if (a.isShared !== b.isShared) return a.isShared ? -1 : 1;
+        return b.totalGrams - a.totalGrams;
+      });
+
+      return results;
+    }
+
+    /**
+     * Berechnet den Vorrats-Match eines Rezepts (inkl. Basis-Zutaten, sofern Basis nicht vorgekocht ist).
+     */
+    function computeRecipePantryMatch(recipe, servings = recipe.defaultServings) {
+      const details = getScaledRecipeDetails(recipe, servings);
+      const neededMap = new Map(); // normName -> { name, needed }
+
+      const addIng = (ing) => {
+        const norm = normalizeName(ing.name);
+        if (!norm) return;
+        const prev = neededMap.get(norm) || { name: ing.name, needed: 0 };
+        prev.needed += Number(ing.amountGrams) || 0;
+        neededMap.set(norm, prev);
+      };
+
+      details.mainIngredients.forEach(addIng);
+      if (details.base && !state.preppedBases[details.base.id]) {
+        details.baseIngredients.forEach(addIng);
+      }
+
+      const items = Array.from(neededMap.values());
+      if (items.length === 0) {
+        return { percent: 100, fullyCovered: 0, total: 0 };
+      }
+
+      let scoreSum = 0;
+      let fullyCovered = 0;
+
+      items.forEach((item) => {
+        const have = getPantryGrams(item.name);
+        if (have >= item.needed - 0.01) {
+          scoreSum += 1;
+          fullyCovered += 1;
+        } else if (have > 0 && item.needed > 0) {
+          scoreSum += have / item.needed;
+        }
+      });
+
+      return {
+        percent: Math.round((scoreSum / items.length) * 100),
+        fullyCovered,
+        total: items.length,
+      };
+    }
+
+    /**
+     * Erstellt intelligente Rezept-Vorschläge sortiert nach Vorrat-Match und Meal-Prep-Synergie.
+     */
+    function computeRecipeSuggestions() {
+      // Welche Basen sind bereits im Wochenplan und an welchen Tagen?
+      const plannedBaseDays = new Map(); // baseId -> [day, ...]
+      const plannedRecipeIds = new Set();
+
+      state.mealPlan.forEach((meal) => {
+        plannedRecipeIds.add(meal.recipeId);
+        const rec = getRecipeById(meal.recipeId);
+        if (rec && rec.baseId) {
+          const arr = plannedBaseDays.get(rec.baseId) || [];
+          if (!arr.includes(meal.day)) arr.push(meal.day);
+          plannedBaseDays.set(rec.baseId, arr);
+        }
+      });
+
+      const list = state.recipes.map((recipe) => {
+        const match = computeRecipePantryMatch(recipe);
+        const base = recipe.baseId ? getBaseById(recipe.baseId) : null;
+        const synergyDays = recipe.baseId ? plannedBaseDays.get(recipe.baseId) || [] : [];
+        const hasSynergy = synergyDays.length > 0;
+        const alreadyPlanned = plannedRecipeIds.has(recipe.id);
+
+        // Kombi-Score: Vorrat-Match + 35 Punkte Bonus für Meal-Prep-Synergie, leichte Abwertung wenn bereits diese Woche eingeplant
+        const comboScore = match.percent + (hasSynergy ? 35 : 0) - (alreadyPlanned ? 20 : 0);
+
+        return {
+          recipe,
+          base,
+          match,
+          synergyDays,
+          hasSynergy,
+          alreadyPlanned,
+          comboScore,
+        };
+      });
+
+      list.sort((a, b) => {
+        if (state.suggestionSort === 'pantry') {
+          return b.match.percent - a.match.percent || (b.hasSynergy ? 1 : 0) - (a.hasSynergy ? 1 : 0);
+        }
+        if (state.suggestionSort === 'synergy') {
+          if (a.hasSynergy !== b.hasSynergy) return a.hasSynergy ? -1 : 1;
+          return b.match.percent - a.match.percent;
+        }
+        return b.comboScore - a.comboScore;
+      });
+
+      return list;
+    }
+
+    /**
+     * Generiert die Einkaufsliste live aus dem Wochenplan inkl. exaktem Abgleich mit dem Vorrat.
+     */
+    function computeShoppingList() {
+      const aggregated = new Map(); // normName -> { normName, name, category, neededGrams, sources: Set<string> }
+      const skippedPreppedBases = new Map(); // baseId -> base
+
+      const addIngredient = (ing, sourceLabel) => {
+        const norm = normalizeName(ing.name);
+        if (!norm) return;
+        if (!aggregated.has(norm)) {
+          const pantryRef = getPantryItemByName(ing.name);
+          aggregated.set(norm, {
+            normName: norm,
+            name: pantryRef ? pantryRef.name : ing.name.trim(),
+            category: ing.category || (pantryRef ? pantryRef.category : 'Trockenvorrat'),
+            unit: ing.unit || (pantryRef ? pantryRef.unit : 'g') || 'g',
+            neededGrams: 0,
+            sources: new Set(),
+          });
+        }
+        const entry = aggregated.get(norm);
+        entry.neededGrams += Number(ing.amountGrams) || 0;
+        if (sourceLabel) entry.sources.add(sourceLabel);
+      };
+
+      state.mealPlan.forEach((meal) => {
+        const recipe = getRecipeById(meal.recipeId);
+        if (!recipe) return;
+        const details = getScaledRecipeDetails(recipe, meal.servings);
+
+        details.mainIngredients.forEach((ing) => addIngredient(ing, recipe.name));
+
+        if (details.base) {
+          if (state.preppedBases[details.base.id]) {
+            skippedPreppedBases.set(details.base.id, details.base);
+          } else {
+            details.baseIngredients.forEach((ing) => addIngredient(ing, `${details.base.name} (${recipe.name})`));
+          }
+        }
+      });
+
+      const toBuy = [];
+      const fromPantry = [];
+
+      aggregated.forEach((entry) => {
+        const pantryGrams = getPantryGrams(entry.name);
+        const needed = cleanGrams(entry.neededGrams);
+        const deficit = cleanGrams(Math.max(0, needed - pantryGrams));
+        const isForced = Boolean(state.forceBuy[entry.normName]);
+
+        const enriched = {
+          ...entry,
+          neededGrams: needed,
+          pantryGrams: cleanGrams(pantryGrams),
+          buyGrams: deficit > 0 ? deficit : needed, // Bei "Doch kaufen" die volle benötigte Menge anzeigen
+          status: deficit === 0 ? (isForced ? 'forced' : 'covered') : (pantryGrams > 0 ? 'partial' : 'missing'),
+          checked: Boolean(state.checkedShopping[entry.normName]),
+          sourcesList: Array.from(entry.sources),
+        };
+
+        if (deficit > 0 || isForced) {
+          toBuy.push(enriched);
+        } else {
+          fromPantry.push(enriched);
+        }
+      });
+
+      // Sortieren nach Kategorie & Name für schnelles Einkaufen
+      const sortByCatAndName = (a, b) => {
+        const catDiff = PANTRY_CATEGORIES.indexOf(a.category) - PANTRY_CATEGORIES.indexOf(b.category);
+        if (catDiff !== 0) return catDiff;
+        return a.name.localeCompare(b.name, 'de');
+      };
+
+      toBuy.sort(sortByCatAndName);
+      fromPantry.sort(sortByCatAndName);
+
+      return {
+        toBuy,
+        fromPantry,
+        skippedPreppedBases: Array.from(skippedPreppedBases.values()),
+      };
+    }
+
+    // =========================================================================
+    // 6. PERSISTENZ-LAYER (FIREBASE FIRESTORE + LOKALER FALLBACK)
+    // =========================================================================
+
+    function userCol(colName) {
+      return collection(db, 'artifacts', appId, 'users', currentUser.uid, colName);
+    }
+
+    function userDoc(colName, docId) {
+      return doc(db, 'artifacts', appId, 'users', currentUser.uid, colName, docId);
+    }
+
+    async function persistDoc(colName, docId, payload) {
+      if (state.storageMode !== 'cloud' || !db || !currentUser) return;
+      try {
+        await setDoc(userDoc(colName, docId), payload);
+      } catch (err) {
+        console.error(`Fehler beim Speichern (${colName}/${docId}):`, err);
+        showToast('Änderung lokal aktiv (Cloud-Sync gerade nicht erreichbar)', 'warn');
+      }
+    }
+
+    async function removeDoc(colName, docId) {
+      if (state.storageMode !== 'cloud' || !db || !currentUser) return;
+      try {
+        await deleteDoc(userDoc(colName, docId));
+      } catch (err) {
+        console.error(`Fehler beim Löschen (${colName}/${docId}):`, err);
+      }
+    }
+
+    async function persistSettings() {
+      await persistDoc('appMeta', 'settings_v3', {
+        preppedBases: state.preppedBases,
+        forceBuy: state.forceBuy,
+        checkedShopping: state.checkedShopping,
+        showSpoons: state.showSpoons,
+        updatedAt: Date.now(),
+      });
+    }
+
+    /** Einmaliges Befüllen bzw. Migration auf Daten-Version v3 (10 Basen & 13 Rezepte aus rezepte_mealprep-v3.csv) */
+    async function seedCloudIfEmpty() {
+      const v3Ref = userDoc('appMeta', 'vorratskueche_v3_state');
+      const v3Snap = await getDoc(v3Ref);
+      if (v3Snap.exists() && v3Snap.data()?.version >= 3) return;
+
+      // Alte Demo-Dokumente (z. B. v1) sauber entfernen, damit v3-Daten sofort & exklusiv aktiv sind
+      const colsToClear = ['pantry', 'bases', 'recipes', 'mealPlan'];
+      const clearPromises = [];
+      for (const colName of colsToClear) {
+        const snap = await getDocs(userCol(colName));
+        snap.docs.forEach((d) => clearPromises.push(deleteDoc(d.ref)));
+      }
+      if (clearPromises.length > 0) {
+        await Promise.all(clearPromises);
+      }
+
+      const seed = getSeedData();
+      const writes = [];
+
+      seed.bases.forEach((b) => writes.push(setDoc(userDoc('bases', b.id), b)));
+      seed.recipes.forEach((r) => writes.push(setDoc(userDoc('recipes', r.id), r)));
+      seed.pantry.forEach((p) => writes.push(setDoc(userDoc('pantry', p.id), p)));
+      seed.mealPlan.forEach((m) => writes.push(setDoc(userDoc('mealPlan', m.id), m)));
+      writes.push(
+        setDoc(userDoc('appMeta', 'settings_v3'), {
+          preppedBases: {},
+          forceBuy: {},
+          checkedShopping: {},
+          showSpoons: true,
+          updatedAt: Date.now(),
+        })
+      );
+      writes.push(setDoc(v3Ref, { seeded: true, version: 3, source: 'rezepte_mealprep-v3.csv', createdAt: Date.now() }));
+
+      await Promise.all(writes);
+    }
+
+    /** Abonniert alle Collections in Echtzeit (ohne komplexe Queries) */
+    function attachFirestoreListeners() {
+      unsubscribers.forEach((fn) => fn());
+      unsubscribers = [];
+
+      const onErr = (label) => (err) => {
+        console.error(`Firestore Listener Fehler (${label}):`, err);
+      };
+
+      unsubscribers.push(
+        onSnapshot(userCol('pantry'), (snap) => {
+          state.pantry = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          renderApp();
+        }, onErr('pantry'))
+      );
+
+      unsubscribers.push(
+        onSnapshot(userCol('bases'), (snap) => {
+          state.bases = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          renderApp();
+        }, onErr('bases'))
+      );
+
+      unsubscribers.push(
+        onSnapshot(userCol('recipes'), (snap) => {
+          state.recipes = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          renderApp();
+        }, onErr('recipes'))
+      );
+
+      unsubscribers.push(
+        onSnapshot(userCol('mealPlan'), (snap) => {
+          state.mealPlan = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          renderApp();
+        }, onErr('mealPlan'))
+      );
+
+      unsubscribers.push(
+        onSnapshot(userDoc('appMeta', 'settings_v3'), (snap) => {
+          if (snap.exists()) {
+            const data = snap.data();
+            state.preppedBases = data.preppedBases || {};
+            state.forceBuy = data.forceBuy || {};
+            state.checkedShopping = data.checkedShopping || {};
+            if (typeof data.showSpoons === 'boolean') state.showSpoons = data.showSpoons;
+            renderApp();
+          }
+        }, onErr('settings_v3'))
+      );
+    }
+
+    /** Initialisiert Firebase (falls konfiguriert) oder startet sofort im lokalen Fallback */
+    async function initAppStorage() {
+      try {
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+          const config = typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
+          if (config && config.apiKey) {
+            const fbApp = initializeApp(config);
+            auth = getAuth(fbApp);
+            db = getFirestore(fbApp);
+
+            // REGEL 3: Authentifizierung zwingend VOR allen Firestore-Abfragen
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+              await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+              await signInAnonymously(auth);
+            }
+
+            currentUser = auth.currentUser;
+            if (currentUser) {
+              state.storageMode = 'cloud';
+              await seedCloudIfEmpty();
+              attachFirestoreListeners();
+              state.initialized = true;
+              updateSyncIndicator();
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Cloud-Speicher nicht verfügbar, starte mit lokalem Fallback:', err);
+      }
+
+      // Nahtloser lokaler Fallback mit Beispieldaten
+      loadLocalSeedData();
+      state.storageMode = 'memory';
+      state.initialized = true;
+      updateSyncIndicator();
+      renderApp();
+    }
+
+    function loadLocalSeedData() {
+      const seed = getSeedData();
+      state.bases = seed.bases;
+      state.recipes = seed.recipes;
+      state.pantry = seed.pantry;
+      state.mealPlan = seed.mealPlan;
+      state.preppedBases = {};
+      state.forceBuy = {};
+      state.checkedShopping = {};
+    }
+
+    async function resetToSampleData() {
+      const seed = getSeedData();
+
+      if (state.storageMode === 'cloud' && db && currentUser) {
+        try {
+          // Bestehende Dokumente entfernen und sauber neu anlegen
+          const deletes = [
+            ...state.pantry.map((p) => deleteDoc(userDoc('pantry', p.id))),
+            ...state.bases.map((b) => deleteDoc(userDoc('bases', b.id))),
+            ...state.recipes.map((r) => deleteDoc(userDoc('recipes', r.id))),
+            ...state.mealPlan.map((m) => deleteDoc(userDoc('mealPlan', m.id))),
+          ];
+          await Promise.all(deletes);
+
+          const writes = [
+            ...seed.bases.map((b) => setDoc(userDoc('bases', b.id), b)),
+            ...seed.recipes.map((r) => setDoc(userDoc('recipes', r.id), r)),
+            ...seed.pantry.map((p) => setDoc(userDoc('pantry', p.id), p)),
+            ...seed.mealPlan.map((m) => setDoc(userDoc('mealPlan', m.id), m)),
+            setDoc(userDoc('appMeta', 'settings_v3'), {
+              preppedBases: {},
+              forceBuy: {},
+              checkedShopping: {},
+              showSpoons: state.showSpoons,
+              updatedAt: Date.now(),
+            }),
+          ];
+          await Promise.all(writes);
+          showToast('Alle 10 Basen, 13 Rezepte & der v3-Startzustand wurden wiederhergestellt.', 'success');
+          return;
+        } catch (err) {
+          console.error('Reset-Fehler:', err);
+        }
+      }
+
+      loadLocalSeedData();
+      renderApp();
+      showToast('Alle 10 Basen, 13 Rezepte & der v3-Startzustand wurden wiederhergestellt.', 'success');
+    }
+
+    function updateSyncIndicator() {
+// ... existing code ... -->
+                ${(base.ingredients || [])
+                  .map(
+                    (ing) => `
+                  <li class="py-2 flex items-center justify-between gap-2 text-sm">
+                    <span class="text-charcoal-800">${escapeHtml(ing.name)}</span>
+                    <div>${formatAmountHTML(ing.amountGrams * factor, ing.name, state.showSpoons, ing.unit)}</div>
+                  </li>
+                `
+                  )
+                  .join('')}
+              </ul>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-cream-200 p-4 space-y-2.5">
+              <h3 class="text-sm font-bold text-charcoal-900">Zubereitung</h3>
+              <ol class="space-y-2">
+                ${(base.steps || [])
+                  .map(
+                    (step, idx) => `
+                  <li class="flex items-start gap-2.5 text-sm text-charcoal-800">
+                    <span class="w-6 h-6 rounded-full bg-sage-100 text-sage-800 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                    <span class="leading-relaxed">${escapeHtml(step)}</span>
+                  </li>
+                `
+                  )
+                  .join('')}
+              </ol>
+            </div>
+          </div>
+
+          <div class="px-5 py-3.5 bg-white border-t border-cream-200 flex flex-wrap items-center justify-between gap-2">
+            <button type="button" data-action="toggle-prepped" data-base-id="${base.id}"
+              class="px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                isPrepped
+                  ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                  : 'bg-sage-600 text-white hover:bg-sage-700'
+              }">
+              ${isPrepped ? '✓ Bereits als vorgekocht markiert' : 'Als vorgekocht markieren'}
+            </button>
+            <button type="button" data-action="close-modal"
+              class="px-4 py-2 rounded-xl text-xs font-semibold bg-cream-100 hover:bg-cream-200 text-charcoal-700">
+              Schließen
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    /** Modal: Gericht zum Wochenplan hinzufügen */
+    function renderAddMealModalContent(m) {
+      const selectedDay = m.day || 'Montag';
+      const selectedRecipeId = m.recipeId || (state.recipes[0] ? state.recipes[0].id : '');
+      const selectedRecipe = getRecipeById(selectedRecipeId);
+      const defaultServings = selectedRecipe ? selectedRecipe.defaultServings : 4;
+
+      return `
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-cream-300 overflow-hidden animate-fade-up">
+          <div class="px-5 py-4 border-b border-cream-200 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-charcoal-900">Gericht einplanen</h2>
+            <button type="button" data-action="close-modal" class="p-1.5 rounded-xl text-charcoal-400 hover:bg-cream-100">✕</button>
+          </div>
+          <form id="add-meal-form" class="p-5 space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-charcoal-700 mb-1.5">Wochentag</label>
+              <select name="day" class="w-full rounded-xl border border-cream-300 bg-cream-50 px-3.5 py-2.5 text-sm focus:outline-none focus:border-sage-500">
+                ${DAYS_OF_WEEK.map(
+                  (d) => `<option value="${d}" ${selectedDay === d ? 'selected' : ''}>${d}</option>`
+                ).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-charcoal-700 mb-1.5">Rezept auswählen</label>
+              <select name="recipeId" required class="w-full rounded-xl border border-cream-300 bg-cream-50 px-3.5 py-2.5 text-sm focus:outline-none focus:border-sage-500">
+                ${state.recipes
+                  .slice()
+                  .sort((a, b) => a.name.localeCompare(b.name, 'de'))
+                  .map((r) => {
+                    const base = r.baseId ? getBaseById(r.baseId) : null;
+                    return `<option value="${r.id}" ${selectedRecipeId === r.id ? 'selected' : ''}>${escapeHtml(r.name)}${base ? ` [${escapeHtml(base.name)}]` : ''}</option>`;
+                  })
+                  .join('')}
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-charcoal-700 mb-1.5">Portionen</label>
+              <input type="number" name="servings" min="1" max="20" required value="${defaultServings}"
+                class="w-full rounded-xl border border-cream-300 bg-cream-50 px-3.5 py-2.5 text-sm focus:outline-none focus:border-sage-500 focus:bg-white" />
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+              <button type="button" data-action="close-modal" class="px-4 py-2 rounded-xl text-sm font-medium text-charcoal-600 hover:bg-cream-100">Abbrechen</button>
+              <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-sage-500 hover:bg-sage-600 text-white">Einplanen</button>
+            </div>
+          </form>
+        </div>
+      `;
+    }
+
+    /** Modal: Vorrats-Zutat anlegen / bearbeiten */
+    function renderPantryModalContent(m) {
+// ... existing code ... -->
+    /** Erzeugt Vorschau-Objekte anhand des aktuellen Spalten-Mappings */
+    function buildImportPreview(importData) {
+      if (!importData || importData.fileKind !== 'csv') return [];
+      const { targetType, dataRows, mapping } = importData;
+
+      if (targetType === 'pantry') {
+        const items = [];
+        dataRows.forEach((row) => {
+          const name = mapping.name >= 0 ? (row[mapping.name] || '').trim() : '';
+          if (!name) return;
+          const rawAmount = mapping.amountGrams >= 0 ? row[mapping.amountGrams] : '100';
+          const numMatch = String(rawAmount || '').match(/(\d+(?:[.,]\d+)?)\s*([a-zA-ZäöüÄÖÜß]*)/);
+          const amountGrams = numMatch ? convertToGrams(numMatch[1], numMatch[2] || 'g', name) : 100;
+          const rawCat = mapping.category >= 0 ? (row[mapping.category] || '').trim() : '';
+          const matchedCat = PANTRY_CATEGORIES.find((c) => normalizeName(c) === normalizeName(rawCat));
+          const category = matchedCat || guessIngredientCategory(name);
+          const exists = Boolean(getPantryItemByName(name));
+
+          items.push({ name, amountGrams, category, exists });
+        });
+        return items;
+      }
+
+      // Rezepte- & (Basis)-Vorschau
+      const items = [];
+      // Erst alle in der CSV selbst definierten "(Basis)"-Einträge erfassen, damit Rezepte in derselben CSV darauf verlinken können
+      const pendingBaseNames = new Map();
+      dataRows.forEach((row) => {
+        const rawTitle = mapping.name >= 0 ? (row[mapping.name] || '').trim() : '';
+        if (rawTitle && /\(basis\)/i.test(rawTitle)) {
+          const cleanName = rawTitle.replace(/\s*\(basis\)\s*/gi, '').trim();
+          pendingBaseNames.set(normalizeName(cleanName), { rawName: rawTitle, cleanName });
+        }
+      });
+
+      dataRows.forEach((row) => {
+        const rawTitle = mapping.name >= 0 ? (row[mapping.name] || '').trim() : '';
+        if (!rawTitle) return;
+
+        const isBase = /\(basis\)/i.test(rawTitle);
+        const name = isBase ? rawTitle.replace(/\s*\(basis\)\s*/gi, '').trim() : rawTitle;
+        const description = mapping.description >= 0 ? (row[mapping.description] || '').trim() : '';
+        const rawServings = mapping.defaultServings >= 0 ? parseInt(row[mapping.defaultServings], 10) : 4;
+        const defaultServings = rawServings > 0 ? rawServings : 4;
+        const rawTime = mapping.prepTimeMinutes >= 0 ? parseInt(row[mapping.prepTimeMinutes], 10) : 25;
+        const prepTimeMinutes = rawTime > 0 ? rawTime : 25;
+
+        const ingredients = parseSmartIngredients(mapping.ingredients >= 0 ? row[mapping.ingredients] : '');
+        const steps = parseSmartSteps(mapping.steps >= 0 ? row[mapping.steps] : '');
+
+        if (isBase) {
+          const computedYield = ingredients.reduce((sum, i) => sum + (Number(i.amountGrams) || 0), 0);
+          const yieldGrams = computedYield > 0 ? Math.round(computedYield / 5) * 5 : 400;
+          const exists = state.bases.some((b) => normalizeName(b.name) === normalizeName(name));
+
+          items.push({
+            isBase: true,
+            name,
+            description,
+            defaultServings,
+            prepTimeMinutes,
+            yieldGrams,
+            baseId: null,
+            baseLabel: `Basis (${yieldGrams} g)`,
+            baseAmountGrams: 0,
+            ingredients,
+            steps,
+            exists,
+          });
+          return;
+        }
+
+        const baseNameRaw = mapping.baseName >= 0 ? (row[mapping.baseName] || '').trim() : '';
+        const baseNameClean = baseNameRaw.replace(/\s*\(basis\)\s*/gi, '').trim();
+        const normBaseClean = normalizeName(baseNameClean);
+
+        const matchedBase = baseNameClean
+          ? state.bases.find(
+              (b) =>
+                normalizeName(b.name) === normBaseClean ||
+                normalizeName(b.name).includes(normBaseClean) ||
+                normBaseClean.includes(normalizeName(b.name))
+            )
+          : null;
+        const matchedPendingBase = !matchedBase && normBaseClean ? pendingBaseNames.get(normBaseClean) : null;
+
+        const rawBaseGrams = mapping.baseAmountGrams >= 0 ? parseFloat(String(row[mapping.baseAmountGrams] || '').replace(',', '.')) : 0;
+        const baseAmountGrams =
+          matchedBase || matchedPendingBase
+            ? rawBaseGrams > 0
+              ? cleanGrams(rawBaseGrams)
+              : matchedBase
+              ? matchedBase.yieldGrams || 400
+              : 400
+            : 0;
+
+        const exists = state.recipes.some((r) => normalizeName(r.name) === normalizeName(name));
+
+        items.push({
+          isBase: false,
+          name,
+          description,
+          defaultServings,
+          prepTimeMinutes,
+          baseId: matchedBase ? matchedBase.id : null,
+          pendingBaseName: matchedPendingBase ? matchedPendingBase.cleanName : null,
+          baseLabel: matchedBase
+            ? matchedBase.name
+            : matchedPendingBase
+            ? `${matchedPendingBase.cleanName} (aus CSV)`
+            : baseNameClean
+            ? `${baseNameClean} (nicht gefunden)`
+            : '',
+          baseAmountGrams,
+          ingredients,
+          steps,
+          exists,
+        });
+      });
+
+      return items;
+    }
+
+    /** Liest eine hochgeladene Datei (.csv, .txt, .json) mit automatischer UTF-8 / Windows-1252-Erkennung ein */
+    function handleUploadedFile(file) {
+      if (!file || !state.modal || state.modal.type !== 'import') return;
+      const reader = new FileReader();
+
+      reader.onload = (ev) => {
+        const buffer = ev.target.result;
+        let content = '';
+        let detectedEncoding = 'UTF-8';
+
+        // Zuerst strenges UTF-8 versuchen; bei Excel/Windows-1252-CSVs automatisch auf windows-1252 wechseln
+        try {
+          content = new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+        } catch (_utf8Err) {
+          content = new TextDecoder('windows-1252').decode(buffer);
+          detectedEncoding = 'Windows-1252 (Excel)';
+        }
+
+        const fileName = file.name || 'datei';
+        const isJson = fileName.toLowerCase().endsWith('.json') || content.trim().startsWith('{');
+
+        if (isJson) {
+          try {
+            const parsed = JSON.parse(content);
+            if (!parsed || typeof parsed !== 'object') throw new Error('Ungültiges JSON');
+            state.modal.data = {
+              ...state.modal.data,
+              fileName,
+              detectedEncoding,
+              fileKind: 'json',
+              jsonPayload: parsed,
+              jsonMode: 'merge',
+              error: null,
+            };
+            renderModal();
+            return;
+          } catch (err) {
+            state.modal.data.error = 'Die JSON-Datei konnte nicht gelesen werden. Bitte prüfe das Format.';
+            renderModal();
+            return;
+          }
+        }
+
+        // CSV / TXT verarbeiten
+        const delimiter = detectCSVDelimiter(content);
+        const { headers, dataRows } = parseCSVText(content, delimiter);
+        if (headers.length === 0 || dataRows.length === 0) {
+          state.modal.data.error = 'Die Datei enthält keine verwertbaren Zeilen. Bitte prüfe die Datei.';
+          renderModal();
+          return;
+        }
+
+        const mapping = autoMapColumns(headers, state.modal.data.targetType);
+        state.modal.data = {
+          ...state.modal.data,
+          fileName,
+          detectedEncoding,
+          fileKind: 'csv',
+          rawText: content,
+          delimiter,
+          headers,
+          dataRows,
+          mapping,
+          error: null,
+        };
+        renderModal();
+      };
+
+      reader.onerror = () => {
+        if (state.modal && state.modal.type === 'import') {
+          state.modal.data.error = 'Fehler beim Einlesen der Datei.';
+          renderModal();
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    /** Führt den endgültigen Import (CSV oder JSON) aus und speichert in State & Cloud */
+    async function executeImport() {
+      if (!state.modal || state.modal.type !== 'import') return;
+      const d = state.modal.data;
+
+      // JSON-Backup Import
+      if (d.fileKind === 'json' && d.jsonPayload) {
+        const p = d.jsonPayload;
+        const replace = d.jsonMode === 'replace';
+        const importedBases = Array.isArray(p.bases) ? p.bases : [];
+        const importedRecipes = Array.isArray(p.recipes) ? p.recipes : [];
+        const importedPantry = Array.isArray(p.pantry) ? p.pantry : [];
+        const importedPlan = Array.isArray(p.mealPlan) ? p.mealPlan : [];
+
+        const mergeByName = (current, incoming, prefix) => {
+          if (replace) return incoming.map((item) => ({ ...item, id: item.id || generateId(prefix) }));
+          const next = [...current];
+          incoming.forEach((item) => {
+            const idx = next.findIndex((x) => normalizeName(x.name) === normalizeName(item.name));
+            if (idx >= 0) next[idx] = { ...next[idx], ...item, id: next[idx].id };
+            else next.push({ ...item, id: item.id || generateId(prefix) });
+          });
+          return next;
+        };
+
+        state.bases = mergeByName(state.bases, importedBases, 'base');
+        state.recipes = mergeByName(state.recipes, importedRecipes, 'rec');
+        state.pantry = mergeByName(state.pantry, importedPantry, 'pan');
+        if (replace || state.mealPlan.length === 0) {
+          state.mealPlan = importedPlan.map((m) => ({ ...m, id: m.id || generateId('mp') }));
+        }
+
+        closeModal();
+        renderApp();
+
+        await Promise.all([
+          ...state.bases.map((b) => persistDoc('bases', b.id, b)),
+          ...state.recipes.map((r) => persistDoc('recipes', r.id, r)),
+          ...state.pantry.map((item) => persistDoc('pantry', item.id, item)),
+          ...state.mealPlan.map((m) => persistDoc('mealPlan', m.id, m)),
+        ]);
+
+        showToast(`JSON-Backup erfolgreich importiert (${importedRecipes.length} Rezepte, ${importedPantry.length} Vorräte).`, 'success');
+        return;
+      }
+
+      // CSV Import
+      const preview = buildImportPreview(d);
+      if (preview.length === 0) {
+        showToast('Keine gültigen Einträge zum Importieren gefunden.', 'warn');
+        return;
+      }
+
+      const updateDuplicates = d.duplicateMode === 'update';
+      let addedCount = 0;
+      let updatedCount = 0;
+
+      if (d.targetType === 'pantry') {
+        const docsToSave = [];
+        const nextPantry = [...state.pantry];
+        preview.forEach((item) => {
+          const existingIdx = nextPantry.findIndex((p) => normalizeName(p.name) === normalizeName(item.name));
+          if (existingIdx >= 0 && updateDuplicates) {
+            const updated = {
+              ...nextPantry[existingIdx],
+              category: item.category,
+              amountGrams: cleanGrams(item.amountGrams),
+            };
+            nextPantry[existingIdx] = updated;
+            docsToSave.push(updated);
+            updatedCount++;
+          } else {
+            const created = {
+              id: generateId('pan'),
+              name: item.name,
+              category: item.category,
+              amountGrams: cleanGrams(item.amountGrams),
+            };
+            nextPantry.push(created);
+            docsToSave.push(created);
+            addedCount++;
+          }
+        });
+
+        state.pantry = nextPantry;
+        closeModal();
+        renderApp();
+        await Promise.all(docsToSave.map((docItem) => persistDoc('pantry', docItem.id, docItem)));
+        showToast(`Vorrat importiert: ${addedCount} neu, ${updatedCount} aktualisiert.`, 'success');
+        return;
+      }
+
+      // Rezepte & erkannte "(Basis)"-Einträge importieren
+      const nextBases = [...state.bases];
+      const nextRecipes = [...state.recipes];
+      const baseDocsToSave = [];
+      const recipeDocsToSave = [];
+      let addedBases = 0;
+      let updatedBases = 0;
+
+      // Schritt 1: Alle als "(Basis)" erkannten Zeilen zuerst in die Basen-Datenbank importieren
+      const importedBaseIdByNorm = new Map();
+      preview
+        .filter((item) => item.isBase)
+        .forEach((item) => {
+          const normName = normalizeName(item.name);
+          const existingIdx = nextBases.findIndex((b) => normalizeName(b.name) === normName);
+          const payload = {
+            name: item.name,
+            description: item.description,
+            yieldGrams: item.yieldGrams || 400,
+            defaultServings: item.defaultServings || 3,
+            prepTimeMinutes: item.prepTimeMinutes || 20,
+            ingredients: item.ingredients,
+            steps: item.steps,
+          };
+
+          if (existingIdx >= 0 && updateDuplicates) {
+            const updated = { ...nextBases[existingIdx], ...payload };
+            nextBases[existingIdx] = updated;
+            baseDocsToSave.push(updated);
+            importedBaseIdByNorm.set(normName, updated.id);
+            updatedBases++;
+          } else {
+            const created = { id: generateId('basis'), ...payload };
+            nextBases.push(created);
+            baseDocsToSave.push(created);
+            importedBaseIdByNorm.set(normName, created.id);
+            addedBases++;
+          }
+        });
+
+      // Schritt 2: Rezepte importieren und automatisch mit vorhandenen oder gerade importierten Basen verknüpfen
+      preview
+        .filter((item) => !item.isBase)
+        .forEach((item) => {
+          let resolvedBaseId = item.baseId;
+          if (!resolvedBaseId && item.pendingBaseName) {
+            resolvedBaseId = importedBaseIdByNorm.get(normalizeName(item.pendingBaseName)) || null;
+          }
+          const resolvedBase = resolvedBaseId ? nextBases.find((b) => b.id === resolvedBaseId) : null;
+          const existingIdx = nextRecipes.findIndex((r) => normalizeName(r.name) === normalizeName(item.name));
+          const payload = {
+            name: item.name,
+            description: item.description,
+            defaultServings: item.defaultServings,
+            prepTimeMinutes: item.prepTimeMinutes,
+            baseId: resolvedBaseId,
+            baseAmountGrams: resolvedBaseId ? item.baseAmountGrams || (resolvedBase ? resolvedBase.yieldGrams : 400) : 0,
+            ingredients: item.ingredients,
+            steps: item.steps,
+          };
+
+          if (existingIdx >= 0 && updateDuplicates) {
+            const updated = { ...nextRecipes[existingIdx], ...payload };
+            nextRecipes[existingIdx] = updated;
+            recipeDocsToSave.push(updated);
+            updatedCount++;
+          } else {
+            const created = { id: generateId('rec'), ...payload };
+            nextRecipes.push(created);
+            recipeDocsToSave.push(created);
+            addedCount++;
+          }
+        });
+
+      state.bases = nextBases;
+      state.recipes = nextRecipes;
+      closeModal();
+      renderApp();
+      await Promise.all([
+        ...baseDocsToSave.map((docItem) => persistDoc('bases', docItem.id, docItem)),
+        ...recipeDocsToSave.map((docItem) => persistDoc('recipes', docItem.id, docItem)),
+      ]);
+      const baseSummary = addedBases + updatedBases > 0 ? ` & ${addedBases + updatedBases} Basen` : '';
+      showToast(`Import abgeschlossen: ${addedCount} neue Rezepte, ${updatedCount} aktualisiert${baseSummary}!`, 'success');
+    }
+
+    /** Hilfsfunktion zum Escapen einzelner CSV-Zellen */
+    function escapeCSVCell(val) {
+// ... existing code ... -->
+                <p class="text-xs text-charcoal-500">
+                  Erkennt automatisch UTF-8 & Windows-1252 (Umlaute ä/ö/ü/ß), Trennzeichen (; , Tab) sowie „(Basis)“-Rezepte.
+                </p>
+                <button type="button" data-action="trigger-file-input"
+                  class="mt-1 px-4 py-2 rounded-xl text-xs font-semibold bg-sage-500 hover:bg-sage-600 text-white shadow-sm transition-colors">
+                  ${m.fileName ? 'Andere Datei auswählen' : 'Datei vom Gerät auswählen'}
+                </button>
+              </div>
+            </div>
+
+            ${
+              m.fileKind === 'csv'
+                ? `
+              <!-- CSV Optionen & Flexibles Spalten-Mapping -->
+              <section class="bg-white rounded-3xl border border-cream-300 p-4 sm:p-5 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <h3 class="text-sm font-bold text-charcoal-900">Spalten-Zuordnung (Mapping)</h3>
+                    <p class="text-xs text-charcoal-500">${m.dataRows.length} Datenzeilen erkannt · passe die Spalten bei Bedarf an.</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <label class="text-xs font-semibold text-charcoal-600">Trennzeichen:</label>
+                    <select id="import-delimiter-select"
+                      class="rounded-xl border border-cream-300 bg-cream-50 px-2.5 py-1.5 text-xs font-medium text-charcoal-800 focus:outline-none focus:border-sage-500">
+                      <option value=";" ${m.delimiter === ';' ? 'selected' : ''}>Semikolon (;)</option>
+                      <option value="," ${m.delimiter === ',' ? 'selected' : ''}>Komma (,)</option>
+                      <option value="\t" ${m.delimiter === '\t' ? 'selected' : ''}>Tabulator</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  ${fields
+                    .map(
+                      (f) => `
+                    <div>
+                      <label class="block text-[11px] font-semibold text-charcoal-700 mb-1">${escapeHtml(f.label)}</label>
+                      <select data-map-field="${f.key}"
+                        class="w-full rounded-xl border border-cream-300 bg-cream-50 px-2.5 py-1.5 text-xs text-charcoal-800 focus:outline-none focus:border-sage-500">
+                        <option value="-1">— nicht zuordnen —</option>
+                        ${m.headers
+                          .map(
+                            (h, idx) => `<option value="${idx}" ${m.mapping[f.key] === idx ? 'selected' : ''}>${escapeHtml(h)}</option>`
+                          )
+                          .join('')}
+                      </select>
+                    </div>
+                  `
+                    )
+                    .join('')}
+                </div>
+              </section>
+
+              <!-- Import-Modus -->
+              <div class="bg-white rounded-2xl border border-cream-300 p-3.5 flex flex-wrap items-center justify-between gap-3">
+                <span class="text-xs font-bold text-charcoal-800">Umgang mit bestehenden Namen:</span>
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" data-action="set-duplicate-mode" data-mode="add"
+                    class="px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
+                      m.duplicateMode !== 'update'
+                        ? 'bg-sage-600 text-white border-sage-600'
+                        : 'bg-cream-50 text-charcoal-700 border-cream-300 hover:bg-cream-100'
+                    }">
+                    Zu bestehenden hinzufügen
+                  </button>
+                  <button type="button" data-action="set-duplicate-mode" data-mode="update"
+                    class="px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
+                      m.duplicateMode === 'update'
+                        ? 'bg-sage-600 text-white border-sage-600'
+                        : 'bg-cream-50 text-charcoal-700 border-cream-300 hover:bg-cream-100'
+                    }">
+                    Duplikate nach Namen aktualisieren
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live-Vorschau-Tabelle -->
+              <section class="bg-white rounded-3xl border border-cream-300 overflow-hidden">
+                <div class="px-4 py-3 bg-sage-50/70 border-b border-sage-100 flex items-center justify-between">
+                  <h3 class="text-xs font-bold text-charcoal-900">
+                    Live-Vorschau (${preview.length} ${targetType === 'pantry' ? 'Artikel' : 'Rezepte'} erkannt)
+                  </h3>
+                  ${
+                    preview.length > previewSlice.length
+                      ? `<span class="text-[11px] text-charcoal-500">Zeige erste ${previewSlice.length} von ${preview.length}</span>`
+                      : ''
+                  }
+                </div>
+
+                ${
+                  preview.length === 0
+                    ? `<p class="p-5 text-center text-xs text-charcoal-500">Bitte ordne mindestens die Pflichtspalte zu, um die Vorschau zu sehen.</p>`
+                    : `
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr class="bg-cream-50 text-charcoal-500 border-b border-cream-200">
+                          ${
+                            targetType === 'pantry'
+                              ? `<th class="py-2.5 px-3 font-semibold">Zutat</th><th class="py-2.5 px-3 font-semibold">Kategorie</th><th class="py-2.5 px-3 font-semibold">Menge</th><th class="py-2.5 px-3 font-semibold">Status</th>`
+                              : `<th class="py-2.5 px-3 font-semibold">Rezept</th><th class="py-2.5 px-3 font-semibold">Port.</th><th class="py-2.5 px-3 font-semibold">Basis</th><th class="py-2.5 px-3 font-semibold">Zutaten</th><th class="py-2.5 px-3 font-semibold">Schritte</th><th class="py-2.5 px-3 font-semibold">Status</th>`
+                          }
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-cream-100">
+                        ${previewSlice
+                          .map((item) =>
+                            targetType === 'pantry'
+                              ? `
+                            <tr class="hover:bg-cream-50/70">
+                              <td class="py-2 px-3 font-semibold text-charcoal-900">${escapeHtml(item.name)}</td>
+                              <td class="py-2 px-3 text-charcoal-600">${escapeHtml(item.category)}</td>
+                              <td class="py-2 px-3">${formatAmountHTML(item.amountGrams, item.name)}</td>
+                              <td class="py-2 px-3">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                  item.exists ? 'bg-amber-100 text-amber-800' : 'bg-sage-100 text-sage-800'
+                                }">${item.exists ? (m.duplicateMode === 'update' ? 'Aktualisiert' : 'Zusätzlich') : 'Neu'}</span>
+                              </td>
+                            </tr>
+                          `
+                              : `
+                            <tr class="hover:bg-cream-50/70">
+                              <td class="py-2 px-3 font-semibold text-charcoal-900">
+                                <div class="flex items-center gap-1.5">
+                                  ${
+                                    item.isBase
+                                      ? `<span class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-sage-600 text-white shrink-0">BASIS</span>`
+                                      : ''
+                                  }
+                                  <span>${escapeHtml(item.name)}</span>
+                                </div>
+                              </td>
+                              <td class="py-2 px-3 text-charcoal-600">${item.defaultServings}</td>
+                              <td class="py-2 px-3">
+                                ${
+                                  item.isBase
+                                    ? `<span class="px-2 py-0.5 rounded-lg bg-sage-50 text-sage-800 font-medium">Ertrag ca. ${item.yieldGrams} g</span>`
+                                    : item.baseId || item.pendingBaseName
+                                    ? `<span class="px-2 py-0.5 rounded-lg bg-sage-100 text-sage-800 font-medium">${escapeHtml(item.baseLabel)} (${item.baseAmountGrams} g)</span>`
+                                    : item.baseLabel
+                                    ? `<span class="text-amber-700">${escapeHtml(item.baseLabel)}</span>`
+                                    : `<span class="text-charcoal-400">—</span>`
+                                }
+                              </td>
+                              <td class="py-2 px-3 text-charcoal-700 font-medium">${item.ingredients.length} erkannt</td>
+                              <td class="py-2 px-3 text-charcoal-700">${item.steps.length}</td>
+                              <td class="py-2 px-3">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                  item.exists ? 'bg-amber-100 text-amber-800' : 'bg-sage-100 text-sage-800'
+                                }">${item.exists ? (m.duplicateMode === 'update' ? 'Aktualisiert' : 'Zusätzlich') : 'Neu'}</span>
+                              </td>
+                            </tr>
+                          `
+                          )
+                          .join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                `
+                }
+              </section>
+            `
+                : m.fileKind === 'json' && m.jsonPayload
+                ? `
+              <!-- JSON-Backup Vorschau -->
+              <section class="bg-white rounded-3xl border border-sage-200 p-5 space-y-4">
+                <div>
+                  <h3 class="text-sm font-bold text-charcoal-900">JSON-Backup erkannt</h3>
+                  <p class="text-xs text-charcoal-500 mt-0.5">Enthaltene Datensätze in deiner Backup-Datei:</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+                  <div class="bg-cream-50 rounded-2xl p-3 border border-cream-200">
+                    <div class="text-lg font-bold text-sage-700">${(m.jsonPayload.recipes || []).length}</div>
+                    <div class="text-[11px] text-charcoal-500">Rezepte</div>
+                  </div>
+                  <div class="bg-cream-50 rounded-2xl p-3 border border-cream-200">
+                    <div class="text-lg font-bold text-sage-700">${(m.jsonPayload.bases || []).length}</div>
+                    <div class="text-[11px] text-charcoal-500">Basen</div>
+                  </div>
+                  <div class="bg-cream-50 rounded-2xl p-3 border border-cream-200">
+                    <div class="text-lg font-bold text-sage-700">${(m.jsonPayload.pantry || []).length}</div>
+                    <div class="text-[11px] text-charcoal-500">Vorräte</div>
+                  </div>
+                  <div class="bg-cream-50 rounded-2xl p-3 border border-cream-200">
+                    <div class="text-lg font-bold text-sage-700">${(m.jsonPayload.mealPlan || []).length}</div>
+                    <div class="text-[11px] text-charcoal-500">Wochenplan</div>
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" data-action="set-json-mode" data-mode="merge"
+                    class="px-3 py-1.5 rounded-xl text-xs font-semibold border ${
+                      m.jsonMode !== 'replace' ? 'bg-sage-600 text-white border-sage-600' : 'bg-cream-50 text-charcoal-700 border-cream-300'
+                    }">Mit bestehenden Daten zusammenführen</button>
+                  <button type="button" data-action="set-json-mode" data-mode="replace"
+                    class="px-3 py-1.5 rounded-xl text-xs font-semibold border ${
+                      m.jsonMode === 'replace' ? 'bg-terracotta-500 text-white border-terracotta-500' : 'bg-cream-50 text-charcoal-700 border-cream-300'
+                    }">Bestehende Daten komplett ersetzen</button>
+                </div>
+              </section>
+            `
+                : `
+              <!-- Hilfe-Hinweis vor dem Upload -->
+              <div class="bg-white rounded-2xl border border-cream-200 p-4 text-xs text-charcoal-600 space-y-1.5">
+                <p class="font-bold text-charcoal-800">Unterstützte Zutaten-Formate in deiner CSV:</p>
+                <p>• Strukturiert: <code class="bg-cream-100 px-1.5 py-0.5 rounded">Hackfleisch:500:g | Zwiebeln:150:g</code></p>
+                <p>• Natürlich: <code class="bg-cream-100 px-1.5 py-0.5 rounded">500 g Hackfleisch; 2 EL Olivenöl; 1 TL Salz</code> oder mehrzeilig in einer Zelle</p>
+              </div>
+            `
+            }
+          </div>
+
+          <!-- Footer -->
+          <div class="px-5 sm:px-6 py-3.5 bg-white border-t border-cream-200 flex items-center justify-between gap-3">
+            <button type="button" data-action="close-modal"
+              class="px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-charcoal-600 hover:bg-cream-100">
+              Abbrechen
+            </button>
+            <button type="button" data-action="execute-import"
+              ${(m.fileKind === 'csv' && preview.length > 0) || m.fileKind === 'json' ? '' : 'disabled'}
+              class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                (m.fileKind === 'csv' && preview.length > 0) || m.fileKind === 'json'
+                  ? 'bg-sage-600 hover:bg-sage-700 text-white shadow-sm'
+                  : 'bg-cream-200 text-charcoal-400 cursor-not-allowed'
+              }">
+              ${
+                m.fileKind === 'json'
+                  ? 'JSON-Backup jetzt importieren'
+                  : `${preview.length} ${targetType === 'pantry' ? 'Artikel' : 'Rezepte'} jetzt importieren`
+              }
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderModal() {
+      const root = document.getElementById('modal-root');
+      if (!root) return;
+      if (!state.modal) {
+        root.classList.add('hidden');
+        root.innerHTML = '';
+        return;
+      }
+
+      let content = '';
+      switch (state.modal.type) {
+        case 'cook':
+          content = renderCookModalContent(state.modal.data);
+          break;
+        case 'batchPrep':
+          content = renderBatchPrepModalContent(state.modal.data);
+          break;
+        case 'addMeal':
+          content = renderAddMealModalContent(state.modal.data);
+          break;
+        case 'pantry':
+          content = renderPantryModalContent(state.modal.data);
+          break;
+        case 'recipe':
+          content = renderRecipeModalContent(state.modal.data);
+          break;
+        case 'base':
+          content = renderBaseModalContent(state.modal.data);
+          break;
+        case 'confirm':
+          content = renderConfirmModalContent(state.modal.data);
+          break;
+        case 'storageInfo':
+          content = renderStorageInfoModalContent();
+          break;
+        case 'import':
+          content = renderImportModalContent(state.modal.data);
+          break;
+      }
+
+      root.classList.remove('hidden');
+      root.innerHTML = `
+        <div id="modal-backdrop" class="fixed inset-0 bg-charcoal-900/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5">
+          ${content}
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 14. HAUPT-RENDERING & EVENT-DELEGATION
+    // =========================================================================
+
+    function renderApp() {
+      if (!state.initialized) return;
+      renderNavigation();
+
+      const main = document.getElementById('app-main');
+      if (!main) return;
+
+      // Aktiven Input-Fokus merken (für flüssiges Tippen in Suchfeldern)
+      const activeEl = document.activeElement;
+      const activeId = activeEl && (activeEl.id === 'pantry-search-input' || activeEl.id === 'recipe-search-input') ? activeEl.id : null;
+      const selStart = activeId ? activeEl.selectionStart : null;
+
+      if (state.activeTab === 'week') {
+        main.innerHTML = renderWeekView();
+      } else if (state.activeTab === 'shopping') {
+        main.innerHTML = renderShoppingView();
+      } else if (state.activeTab === 'pantry') {
+        main.innerHTML = renderPantryView();
+      } else if (state.activeTab === 'recipes') {
+        main.innerHTML = renderRecipesView();
+      }
+
+      if (activeId) {
+        const restored = document.getElementById(activeId);
+        if (restored) {
+          restored.focus();
+          if (selStart !== null) restored.setSelectionRange(selStart, selStart);
+        }
+      }
+
+      if (state.modal) {
+        renderModal();
+      }
+    }
+
+    // Globale Click-Delegation
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+
+      // Klick auf Modal-Backdrop schließt das Modal
+      if (target.id === 'modal-backdrop') {
+        closeModal();
+        return;
+      }
+
+      // Navigations-Tabs
+      const navBtn = target.closest('[data-nav-tab]');
+      if (navBtn) {
+        state.activeTab = navBtn.dataset.navTab;
+        renderApp();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      // Header-Buttons
+      if (target.closest('#global-unit-toggle')) {
+        state.showSpoons = !state.showSpoons;
+        renderApp();
+        persistSettings();
+        return;
+      }
+
+      if (target.closest('#reset-demo-btn')) {
+        openModal('storageInfo');
+        return;
+      }
+
+      // Kochmodus-spezifische Aktionen
+      const cookServBtn = target.closest('[data-cook-servings]');
+      if (cookServBtn && state.modal && state.modal.type === 'cook') {
+        state.modal.data.servings = Math.max(1, parseInt(cookServBtn.dataset.cookServings, 10) || 4);
+        renderModal();
+        return;
+      }
+
+      const cookToggleBtn = target.closest('[data-cook-toggle]');
+      if (cookToggleBtn && state.modal && state.modal.type === 'cook') {
+        const kind = cookToggleBtn.dataset.cookToggle;
+        if (kind === 'base-ings') {
+          state.modal.data.baseIngredientsCollapsed = !state.modal.data.baseIngredientsCollapsed;
+        } else if (kind === 'base-steps') {
+          state.modal.data.baseStepsCollapsed = !state.modal.data.baseStepsCollapsed;
+        } else if (kind === 'all-base') {
+          const allClosed = state.modal.data.baseIngredientsCollapsed && state.modal.data.baseStepsCollapsed;
+          state.modal.data.baseIngredientsCollapsed = !allClosed;
+          state.modal.data.baseStepsCollapsed = !allClosed;
+        }
+        renderModal();
+        return;
+      }
+
+      const cookCheckBtn = target.closest('[data-cook-check]');
+      if (cookCheckBtn && state.modal && state.modal.type === 'cook') {
+        const kind = cookCheckBtn.dataset.cookCheck;
+        const idx = cookCheckBtn.dataset.idx;
+        const mapKey = {
+          'base-ing': 'checkedBaseIngs',
+          'main-ing': 'checkedMainIngs',
+          'base-step': 'checkedBaseSteps',
+          'main-step': 'checkedMainSteps',
+        }[kind];
+        if (mapKey) {
+          state.modal.data[mapKey][idx] = !state.modal.data[mapKey][idx];
+          renderModal();
+        }
+        return;
+      }
+
+      // Allgemeine Daten-Aktionen
+      const actionBtn = target.closest('[data-action]');
+      if (!actionBtn) return;
+
+      const action = actionBtn.dataset.action;
+
+      switch (action) {
+        case 'close-modal':
+          closeModal();
+          break;
+
+        case 'toggle-global-units':
+          state.showSpoons = !state.showSpoons;
+          renderApp();
+          persistSettings();
+          break;
+
+        case 'open-cook':
+          openCookModal(actionBtn.dataset.recipeId, actionBtn.dataset.servings);
+          break;
+
+        case 'open-batch-prep':
+          openModal('batchPrep', {
+            baseId: actionBtn.dataset.baseId,
+            totalGrams: Number(actionBtn.dataset.totalGrams) || 400,
+          });
+          break;
+
+        case 'open-add-meal':
+          openModal('addMeal', {
+            day: actionBtn.dataset.day || 'Montag',
+            recipeId: actionBtn.dataset.recipeId || '',
+          });
+          break;
+
+        case 'remove-meal':
+          removeMealFromPlan(actionBtn.dataset.mealId);
+          break;
+
+        case 'toggle-prepped':
+          togglePreppedBase(actionBtn.dataset.baseId);
+          break;
+
+        case 'set-suggestion-sort':
+          state.suggestionSort = actionBtn.dataset.sort;
+          renderApp();
+          break;
+
+        case 'toggle-mobile-suggestions':
+          state.mobileSuggestionsOpen = !state.mobileSuggestionsOpen;
+          renderApp();
+          break;
+
+        case 'quick-add-suggestion': {
+          const recId = actionBtn.dataset.recipeId;
+          const select = document.querySelector(`[data-suggestion-day="${recId}"]`);
+          const day = select ? select.value : 'Dienstag';
+          const rec = getRecipeById(recId);
+          addMealToPlan(day, recId, rec ? rec.defaultServings : 4);
+          break;
+        }
+
+        case 'toggle-shop-check':
+          toggleShoppingCheck(actionBtn.dataset.norm);
+          break;
+
+        case 'toggle-force-buy':
+          toggleForceBuy(actionBtn.dataset.norm, actionBtn.dataset.name);
+          break;
+
+        case 'book-checked':
+          bookCheckedToPantry();
+          break;
+
+        case 'set-pantry-cat':
+          state.pantryCategory = actionBtn.dataset.cat;
+          renderApp();
+          break;
+
+        case 'adjust-pantry':
+          adjustPantryAmount(actionBtn.dataset.id, Number(actionBtn.dataset.delta));
+          break;
+
+        case 'open-pantry-modal':
+          openModal('pantry', { id: actionBtn.dataset.id || null });
+          break;
+
+        case 'confirm-delete-pantry': {
+          const item = state.pantry.find((p) => p.id === actionBtn.dataset.id);
+          if (!item) break;
+          openModal('confirm', {
+            title: 'Zutat aus Vorrat löschen?',
+            message: `Möchtest du „${item.name}“ (${formatNumberDE(item.amountGrams, 0)} g) wirklich aus deiner Vorrats-Datenbank entfernen?`,
+            confirmLabel: 'Löschen',
+            danger: true,
+            onConfirm: () => deletePantryItem(item.id),
+          });
+          break;
+        }
+
+        case 'set-recipes-subtab':
+          state.recipesSubTab = actionBtn.dataset.subtab;
+          renderApp();
+          break;
+
+        case 'set-recipe-base-filter':
+          state.recipeBaseFilter = actionBtn.dataset.filter;
+          renderApp();
+          break;
+
+        case 'open-recipe-modal':
+          openModal('recipe', { id: actionBtn.dataset.id || null });
+          break;
+
+        case 'confirm-delete-recipe': {
+          const rec = getRecipeById(actionBtn.dataset.id);
+          if (!rec) break;
+          openModal('confirm', {
+            title: 'Rezept löschen?',
+            message: `Soll „${rec.name}“ dauerhaft gelöscht werden? Eventuelle Einträge im Wochenplan werden ebenfalls entfernt.`,
+            confirmLabel: 'Löschen',
+            danger: true,
+            onConfirm: () => deleteRecipe(rec.id),
+          });
+          break;
+        }
+
+        case 'open-base-modal':
+          openModal('base', { id: actionBtn.dataset.id || null });
+          break;
+
+        case 'confirm-delete-base': {
+          const base = getBaseById(actionBtn.dataset.id);
+          if (!base) break;
+          openModal('confirm', {
+            title: 'Rezept-Basis löschen?',
+            message: `Soll „${base.name}“ gelöscht werden? Verknüpfte Rezepte bleiben erhalten, verlieren aber die Basis-Zuordnung.`,
+            confirmLabel: 'Löschen',
+            danger: true,
+            onConfirm: () => deleteBase(base.id),
+          });
+          break;
+        }
+
+        case 'confirm-reset-demo':
+          openModal('confirm', {
+            title: 'Beispieldaten zurücksetzen?',
+            message: 'Alle aktuellen Vorräte, Rezepte, Basen und dein Wochenplan werden auf den realistischen Ausgangszustand zurückgesetzt.',
+            confirmLabel: 'Zurücksetzen',
+            danger: true,
+            onConfirm: async () => {
+              closeModal();
+              await resetToSampleData();
+            },
+          });
+          break;
+
+        case 'execute-confirm':
+          if (state.modal && state.modal.type === 'confirm' && typeof state.modal.data.onConfirm === 'function') {
+            state.modal.data.onConfirm();
+          }
+          break;
+
+        case 'add-ing-row': {
+          const container = document.getElementById('form-ingredients-container');
+          if (container) {
+            container.insertAdjacentHTML('beforeend', createIngredientRowHTML());
+          }
+          break;
+        }
+
+        case 'add-step-row': {
+          const container = document.getElementById('form-steps-container');
+          if (container) {
+            container.insertAdjacentHTML('beforeend', createStepRowHTML());
+          }
+          break;
+        }
+
+        case 'remove-form-row': {
+          const row = actionBtn.closest('.ing-row, .step-row');
+          if (row && row.parentElement && row.parentElement.children.length > 1) {
+            row.remove();
+          }
+          break;
+        }
+
+        case 'open-import-modal':
+          openModal('import', {
+            targetType: actionBtn.dataset.importTarget || 'recipes',
+            fileName: '',
+            fileKind: null,
+            rawText: '',
+            delimiter: ';',
+            headers: [],
+            dataRows: [],
+            mapping: {},
+            duplicateMode: 'add',
+            jsonPayload: null,
+            jsonMode: 'merge',
+            error: null,
+          });
+          break;
+
+        case 'set-import-target':
+          if (state.modal && state.modal.type === 'import') {
+            const nextTarget = actionBtn.dataset.target;
+            state.modal.data.targetType = nextTarget;
+            if (state.modal.data.fileKind === 'csv' && state.modal.data.headers.length > 0) {
+              state.modal.data.mapping = autoMapColumns(state.modal.data.headers, nextTarget);
+            }
+            renderModal();
+          }
+          break;
+
+        case 'trigger-file-input': {
+          const fileInput = document.getElementById('import-file-input');
+          if (fileInput) fileInput.click();
+          break;
+        }
+
+        case 'set-duplicate-mode':
+          if (state.modal && state.modal.type === 'import') {
+            state.modal.data.duplicateMode = actionBtn.dataset.mode;
+            renderModal();
+          }
+          break;
+
+        case 'set-json-mode':
+          if (state.modal && state.modal.type === 'import') {
+            state.modal.data.jsonMode = actionBtn.dataset.mode;
+            renderModal();
+          }
+          break;
+
+        case 'execute-import':
+          executeImport();
+          break;
+
+        case 'export-recipes-csv':
+          exportRecipesCSV();
+          break;
+
+        case 'export-pantry-csv':
+          exportPantryCSV();
+          break;
+
+        case 'download-sample-csv':
+          downloadSampleCSV(actionBtn.dataset.sampleType || 'recipes');
+          break;
+
+        case 'export-json-backup':
+          exportJsonBackup();
+          break;
+      }
+    });
+
+    // Datei-Upload, Trennzeichen-Wechsel & Spalten-Mapping im Import-Modal
+    document.addEventListener('change', (e) => {
+      if (e.target.id === 'import-file-input') {
+        const file = e.target.files && e.target.files[0];
+        if (file) handleUploadedFile(file);
+        return;
+      }
+
+      if (e.target.id === 'import-delimiter-select' && state.modal && state.modal.type === 'import') {
+        const delim = e.target.value;
+        const { headers, dataRows } = parseCSVText(state.modal.data.rawText, delim);
+        state.modal.data.delimiter = delim;
+        state.modal.data.headers = headers;
+        state.modal.data.dataRows = dataRows;
+        state.modal.data.mapping = autoMapColumns(headers, state.modal.data.targetType);
+        renderModal();
+        return;
+      }
+
+      if (e.target.dataset && e.target.dataset.mapField && state.modal && state.modal.type === 'import') {
+        state.modal.data.mapping[e.target.dataset.mapField] = parseInt(e.target.value, 10);
+        renderModal();
+      }
+    });
+
+    // Drag & Drop Unterstützung für die Upload-Zone
+    document.addEventListener('dragover', (e) => {
+      const zone = e.target.closest('#import-drop-zone');
+      if (!zone) return;
+      e.preventDefault();
+      zone.classList.add('border-sage-600', 'bg-sage-50');
+    });
+
+    document.addEventListener('dragleave', (e) => {
+      const zone = e.target.closest('#import-drop-zone');
+      if (!zone) return;
+      zone.classList.remove('border-sage-600', 'bg-sage-50');
+    });
+
+    document.addEventListener('drop', (e) => {
+      const zone = e.target.closest('#import-drop-zone');
+      if (!zone) return;
+      e.preventDefault();
+      zone.classList.remove('border-sage-600', 'bg-sage-50');
+      const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) handleUploadedFile(file);
+    });
+
+    // Live-Suche in Vorrat & Rezepten
+    document.addEventListener('input', (e) => {
+      if (e.target.id === 'pantry-search-input') {
+        state.pantrySearch = e.target.value;
+        renderApp();
+      } else if (e.target.id === 'recipe-search-input') {
+        state.recipeSearch = e.target.value;
+        renderApp();
+      }
+    });
+
+    // Formular-Submissions (Modals)
+    document.addEventListener('submit', (e) => {
+      const form = e.target;
+
+      if (form.id === 'add-meal-form') {
+        e.preventDefault();
+        const fd = new FormData(form);
+        closeModal();
+        addMealToPlan(fd.get('day'), fd.get('recipeId'), fd.get('servings'));
+        return;
+      }
+
+      if (form.id === 'pantry-form') {
+        e.preventDefault();
+        const fd = new FormData(form);
+        savePantryItem({
+          id: fd.get('id') || null,
+          name: fd.get('name'),
+          category: fd.get('category'),
+          amountGrams: fd.get('amountGrams'),
+        });
+        return;
+      }
+
+      if (form.id === 'recipe-form') {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const ingredients = Array.from(form.querySelectorAll('.ing-row')).map((row) => ({
+          name: row.querySelector('[data-field="name"]').value,
+          amountGrams: row.querySelector('[data-field="amountGrams"]').value,
+          category: row.querySelector('[data-field="category"]').value,
+        }));
+        const steps = Array.from(form.querySelectorAll('.step-row')).map(
+          (row) => row.querySelector('[data-field="step"]').value
+        );
+
+        saveRecipe({
+          id: fd.get('id') || null,
+          name: fd.get('name'),
+          description: fd.get('description'),
+          defaultServings: fd.get('defaultServings'),
+          prepTimeMinutes: fd.get('prepTimeMinutes'),
+          baseId: fd.get('baseId') || null,
+          baseAmountGrams: fd.get('baseAmountGrams'),
+          ingredients,
+          steps,
+        });
+        return;
+      }
+
+      if (form.id === 'base-form') {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const ingredients = Array.from(form.querySelectorAll('.ing-row')).map((row) => ({
+          name: row.querySelector('[data-field="name"]').value,
+          amountGrams: row.querySelector('[data-field="amountGrams"]').value,
+          category: row.querySelector('[data-field="category"]').value,
+        }));
+        const steps = Array.from(form.querySelectorAll('.step-row')).map(
+          (row) => row.querySelector('[data-field="step"]').value
+        );
+
+        saveBase({
+          id: fd.get('id') || null,
+          name: fd.get('name'),
+          description: fd.get('description'),
+          yieldGrams: fd.get('yieldGrams'),
+          ingredients,
+          steps,
+        });
+        return;
+      }
+    });
+
+    // Escape-Taste schließt offene Modals
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && state.modal) {
+        closeModal();
+      }
+    });
+
+    // =========================================================================
+    // 15. APP STARTEN
+    // =========================================================================
+    initAppStorage();
+  </script>
+</body>
+</html>
